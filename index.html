@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Raksha.ai - Women Safety Portal</title>
     
     <!-- 1. Tailwind CSS -->
@@ -105,7 +105,7 @@
         const Icons = {
             Shield: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
             Siren: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/><path d="M21 12h1"/><path d="M18.5 4.5 20 3"/><path d="M2 12h1"/><path d="M4 3 5.5 4.5"/></svg>,
-            Video: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>,
+            Mic: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/><line x1="8" x2="16" y1="22" y2="22"/></svg>,
             Brain: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
             Map: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>,
             Users: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
@@ -114,7 +114,6 @@
             Heart: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
             Scale: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>,
             Lock: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
-            BarChart: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>,
             Menu: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
             X: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 18 12"/></svg>,
             Phone: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
@@ -137,7 +136,7 @@
                 
                 const newItems = Array.from({ length: 15 }).map((_, i) => ({
                     id: i,
-                    IconComponent: icons[Math.floor(Math.random() * icons.length)], // Store Component Reference
+                    IconComponent: icons[Math.floor(Math.random() * icons.length)], 
                     left: `${Math.random() * 100}%`,
                     animationDuration: `${Math.random() * 10 + 10}s`,
                     animationDelay: `${Math.random() * 5}s`,
@@ -166,20 +165,19 @@
             );
         };
 
-        // --- CONFIG (Updated: using Icon Components, not Elements) ---
+        // --- CONFIG ---
         const FEATURES = [
             { id: 1, title: "SOS & Emergency", Icon: Icons.Siren, desc: "One-tap SOS, Shake-to-Alert, and 'Help Me' voice trigger.", color: "text-rose-500", bg: "bg-rose-500/10" },
-            { id: 2, title: "Auto Evidence", Icon: Icons.Video, desc: "Auto-records 30s video/audio on SOS trigger. Secure cloud upload.", color: "text-blue-400", bg: "bg-blue-400/10" },
+            { id: 2, title: "Auto Evidence", Icon: Icons.Mic, desc: "Auto-records 30s audio on SOS trigger. Secure cloud upload.", color: "text-blue-400", bg: "bg-blue-400/10" }, // CHANGED: Icon to Mic, desc to audio only
             { id: 3, title: "AI Smart Safety", Icon: Icons.Brain, desc: "Detects voice stress and abnormal movement patterns.", color: "text-purple-400", bg: "bg-purple-400/10" },
             { id: 4, title: "Safe Zone Map", Icon: Icons.Map, desc: "Crowdsourced heatmaps. Green for safe, Red for unsafe areas.", color: "text-emerald-400", bg: "bg-emerald-400/10" },
             { id: 5, title: "Trusted Circle", Icon: Icons.Users, desc: "Live 'Walk With Me' tracking & auto-arrival alerts.", color: "text-pink-400", bg: "bg-pink-400/10" },
             { id: 6, title: "Stealth Tools", Icon: Icons.Ghost, desc: "Fake Call generator & Calculator disguise icon.", color: "text-gray-400", bg: "bg-gray-400/10" },
             { id: 7, title: "Travel Safety", Icon: Icons.Navigation, desc: "Route deviation detection & cab warnings.", color: "text-orange-400", bg: "bg-orange-400/10" },
-            { id: 8, title: "Community", Icon: Icons.Heart, desc: "Alert nearby verified volunteers instantly.", color: "text-rose-400", bg: "bg-rose-400/10" },
             { id: 9, title: "Legal & Police", Icon: Icons.Scale, desc: "One-tap helpline (112) & Legal AI chatbot.", color: "text-yellow-400", bg: "bg-yellow-400/10" },
-            { id: 10, title: "Profile Security", Icon: Icons.Lock, desc: "Face unlock & Low-Battery Emergency Mode.", color: "text-cyan-400", bg: "bg-cyan-400/10" },
-            { id: 11, title: "Analytics", Icon: Icons.BarChart, desc: "Monthly safety reports & risk scores.", color: "text-indigo-400", bg: "bg-indigo-400/10" }
+            { id: 10, title: "Profile Security", Icon: Icons.Lock, desc: "Low-Battery Emergency Mode & Secure Pin.", color: "text-cyan-400", bg: "bg-cyan-400/10" }, // CHANGED: Removed Face Unlock
         ];
+        // REMOVED: Community (id:8) and Analytics (id:11)
 
         // --- COMPONENTS ---
         const FeatureCard = ({ feature }) => (
@@ -211,14 +209,14 @@
                 <div className="flex flex-col items-center justify-center py-6">
                     <button 
                         onClick={handleSOS} 
-                        className={`relative w-40 h-40 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_0_50px_rgba(225,29,72,0.3)] 
+                        className={`relative w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_0_50px_rgba(225,29,72,0.3)] 
                         ${active ? 'bg-red-600 animate-pulse scale-110' : 'bg-gradient-to-br from-rose-600 to-rose-800 hover:scale-105 hover:shadow-[0_0_80px_rgba(225,29,72,0.6)]'}`}
                     >
                         <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping-slow"></div>
                         <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_10s_linear_infinite]"></div>
                         <div className="flex flex-col items-center text-white z-10">
-                            <Icons.Siren className="w-10 h-10 mb-1" />
-                            <span className="text-2xl font-black tracking-wider">SOS</span>
+                            <Icons.Siren className="w-9 h-9 md:w-10 md:h-10 mb-1" />
+                            <span className="text-xl md:text-2xl font-black tracking-wider">SOS</span>
                             {active && <span className="text-xs font-bold mt-1 bg-black/20 px-2 py-0.5 rounded-full">{countdown > 0 ? `Sending ${countdown}s` : 'SENT'}</span>}
                         </div>
                     </button>
@@ -334,44 +332,6 @@
             );
         };
 
-        const SafeZoneMap = () => (
-            <div className="glass-panel h-[400px] rounded-2xl overflow-hidden relative group">
-                <div className="absolute inset-0 bg-[#0f172a] opacity-80">
-                    <div className="grid grid-cols-6 grid-rows-6 h-full w-full opacity-10">
-                        {[...Array(36)].map((_, i) => <div key={i} className="border border-slate-500"></div>)}
-                    </div>
-                    <div className="absolute top-1/3 left-1/4 w-40 h-40 bg-green-500/20 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-red-500/20 rounded-full blur-3xl animate-pulse"></div>
-                    
-                    <div className="absolute top-[35%] left-[28%] flex flex-col items-center group/marker cursor-pointer">
-                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center animate-bounce">
-                            <Icons.Map className="w-4 h-4 text-green-400" />
-                        </div>
-                        <span className="opacity-0 group-hover/marker:opacity-100 transition-opacity text-[10px] bg-black/80 px-2 py-1 rounded mt-1">Safe Zone</span>
-                    </div>
-
-                    <div className="absolute bottom-[30%] right-[30%] flex flex-col items-center group/marker cursor-pointer">
-                         <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">
-                            <Icons.AlertTriangle className="w-4 h-4 text-red-500" />
-                        </div>
-                         <span className="opacity-0 group-hover/marker:opacity-100 transition-opacity text-[10px] bg-black/80 px-2 py-1 rounded mt-1">High Risk</span>
-                    </div>
-                </div>
-
-                <div className="absolute bottom-4 left-4 right-4 bg-slate-900/80 backdrop-blur-md p-4 rounded-xl border border-white/10 flex justify-between items-center shadow-xl">
-                   <div>
-                       <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Current Zone</p>
-                       <p className="text-sm font-bold text-white flex items-center gap-2">
-                           <span className="w-2 h-2 rounded-full bg-yellow-500"></span> Moderate Risk
-                       </p>
-                   </div>
-                   <button className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 text-xs font-bold rounded-lg shadow-lg shadow-rose-600/20 transition-all">
-                       Share Location
-                   </button>
-                </div>
-            </div>
-        );
-
         // --- MAIN APP ---
         function SafetyApp() {
             const [view, setView] = useState('home');
@@ -381,9 +341,9 @@
             const navLinks = [
                 { id: 'home', label: 'Home' }, 
                 { id: 'features', label: 'Features' }, 
-                { id: 'community', label: 'Safe Zones' }, 
                 { id: 'legal', label: 'Legal Aid' }
             ];
+            // REMOVED: Community/Safe Zones link
 
             return (
                 <div className="min-h-screen relative z-10 w-full flex flex-col">
@@ -446,7 +406,7 @@
                                         Avishakar Hackathon 2025
                                     </div>
                                     
-                                    <h1 className="text-5xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight">
+                                    <h1 className="text-4xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight">
                                         Fearless <br/> 
                                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 animate-pulse">Movement.</span>
                                     </h1>
@@ -471,8 +431,8 @@
                                 </div>
 
                                 {/* PHONE MOCKUP */}
-                                <div className="lg:w-1/2 flex justify-center perspective-1000">
-                                    <div className="relative w-[340px] bg-[#0f172a] rounded-[3rem] border-8 border-[#1e293b] shadow-2xl overflow-hidden transform rotate-y-12 hover:rotate-0 transition-transform duration-500 ease-out z-20">
+                                <div className="lg:w-1/2 flex justify-center perspective-1000 max-w-full">
+                                    <div className="relative w-[340px] max-w-full bg-[#0f172a] rounded-[3rem] border-8 border-[#1e293b] shadow-2xl overflow-hidden transform rotate-y-12 hover:rotate-0 transition-transform duration-500 ease-out z-20">
                                         {/* Notch */}
                                         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-7 bg-[#1e293b] rounded-b-2xl z-20"></div>
                                         
@@ -496,11 +456,7 @@
                                                 <SOSButton />
                                             </div>
                                             
-                                            <div className="grid grid-cols-2 gap-3 mt-6 relative z-10">
-                                                <button onClick={() => setView('community')} className="glass-panel p-3 rounded-xl flex flex-col items-center gap-2 text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
-                                                    <Icons.Map className="w-6 h-6 text-emerald-400" />
-                                                    <span className="text-xs font-semibold">Safe Map</span>
-                                                </button>
+                                            <div className="grid grid-cols-1 gap-3 mt-6 relative z-10">
                                                 <button onClick={() => setView('features')} className="glass-panel p-3 rounded-xl flex flex-col items-center gap-2 text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
                                                     <Icons.Users className="w-6 h-6 text-pink-400" />
                                                     <span className="text-xs font-semibold">Circle</span>
@@ -534,45 +490,6 @@
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {FEATURES.map(f => <FeatureCard key={f.id} feature={f} />)}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* VIEW: COMMUNITY */}
-                        {view === 'community' && (
-                            <div className="max-w-6xl mx-auto animate-fade-in pt-8">
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                                    <div className="space-y-8">
-                                        <h2 className="text-4xl font-bold text-white leading-tight">Know Before You Go. <br/><span className="text-rose-500">Live Safety Mapping.</span></h2>
-                                        <p className="text-slate-400 text-lg leading-relaxed">
-                                            Navigate with confidence. Our heatmap aggregates official crime data, lighting conditions, and real-time community feedback to color-code the safety of your route.
-                                        </p>
-                                        
-                                        <div className="space-y-4">
-                                            <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-                                                <div className="bg-green-500/20 p-2 rounded-lg text-green-400"><Icons.CheckCircle /></div>
-                                                <div>
-                                                    <h4 className="font-bold text-white">Verified Safe Zones</h4>
-                                                    <p className="text-sm text-slate-400">Areas with active police patrolling and good lighting.</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-                                                <div className="bg-rose-500/20 p-2 rounded-lg text-rose-400"><Icons.Users /></div>
-                                                <div>
-                                                    <h4 className="font-bold text-white">Community Flagging</h4>
-                                                    <p className="text-sm text-slate-400">Users report harassment or dark spots instantly.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
-                                            View Full Screen Map <Icons.ChevronRight className="w-5 h-5" />
-                                        </button>
-                                    </div>
-                                    <div className="relative">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-rose-500 to-purple-600 rounded-2xl blur-xl opacity-20"></div>
-                                        <SafeZoneMap />
-                                    </div>
                                 </div>
                             </div>
                         )}
