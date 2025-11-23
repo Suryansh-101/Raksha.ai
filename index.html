@@ -66,6 +66,20 @@
         }
         .animate-fade-in { animation: fade-in-up 0.8s ease-out forwards; }
 
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .animate-scan {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #e11d48, transparent);
+            animation: scan 3s linear infinite;
+        }
+
         /* Falling Animation */
         @keyframes fall {
             0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
@@ -83,7 +97,7 @@
 </head>
 <body class="overflow-x-hidden relative selection:bg-rose-500/30 selection:text-white">
     
-    <!-- Ambient Background (Fixed & Low Z-Index) -->
+    <!-- Ambient Background -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-50">
         <div class="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-rose-900/20 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[120px] mix-blend-screen"></div>
@@ -93,7 +107,6 @@
     <!-- React Root -->
     <div id="root" class="relative z-0">
         <div class="h-screen flex items-center justify-center text-rose-500">
-             <!-- Fallback Spinner -->
              <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-500"></div>
         </div>
     </div>
@@ -101,7 +114,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- ICONS (Defined as Components) ---
+        // --- ICONS ---
         const Icons = {
             Shield: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
             Siren: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/><path d="M21 12h1"/><path d="M18.5 4.5 20 3"/><path d="M2 12h1"/><path d="M4 3 5.5 4.5"/></svg>,
@@ -124,16 +137,18 @@
             ChevronRight: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>,
             CheckCircle: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
             Sparkles: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M9 3v4"/><path d="M3 5h4"/><path d="M3 9h4"/></svg>,
+            Layers: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
+            Info: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>,
+            Camera: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>,
+            Eye: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>,
+            Zap: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
         };
 
-        // --- FALLING ANIMATION ---
         const FallingAnimation = () => {
             const [items, setItems] = useState([]);
-
             useEffect(() => {
                 const colors = ['text-rose-500', 'text-pink-400', 'text-purple-500', 'text-white'];
                 const icons = [Icons.Shield, Icons.Heart, Icons.Sparkles];
-                
                 const newItems = Array.from({ length: 15 }).map((_, i) => ({
                     id: i,
                     IconComponent: icons[Math.floor(Math.random() * icons.length)], 
@@ -145,19 +160,10 @@
                 }));
                 setItems(newItems);
             }, []);
-
             return (
                 <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
                     {items.map((item) => (
-                        <div 
-                            key={item.id}
-                            className={`falling-item ${item.color} opacity-20`}
-                            style={{
-                                left: item.left,
-                                animationDuration: item.animationDuration,
-                                animationDelay: item.animationDelay
-                            }}
-                        >
+                        <div key={item.id} className={`falling-item ${item.color} opacity-20`} style={{ left: item.left, animationDuration: item.animationDuration, animationDelay: item.animationDelay }}>
                             <item.IconComponent style={{ width: item.size, height: item.size }} />
                         </div>
                     ))}
@@ -165,21 +171,18 @@
             );
         };
 
-        // --- CONFIG ---
         const FEATURES = [
             { id: 1, title: "SOS & Emergency", Icon: Icons.Siren, desc: "One-tap SOS, Shake-to-Alert, and 'Help Me' voice trigger.", color: "text-rose-500", bg: "bg-rose-500/10" },
-            { id: 2, title: "Auto Evidence", Icon: Icons.Mic, desc: "Auto-records 30s audio on SOS trigger. Secure cloud upload.", color: "text-blue-400", bg: "bg-blue-400/10" }, // CHANGED: Icon to Mic, desc to audio only
+            { id: 2, title: "Auto Evidence", Icon: Icons.Mic, desc: "Auto-records 30s audio on SOS trigger. Secure cloud upload.", color: "text-blue-400", bg: "bg-blue-400/10" }, 
             { id: 3, title: "AI Smart Safety", Icon: Icons.Brain, desc: "Detects voice stress and abnormal movement patterns.", color: "text-purple-400", bg: "bg-purple-400/10" },
             { id: 4, title: "Safe Zone Map", Icon: Icons.Map, desc: "Crowdsourced heatmaps. Green for safe, Red for unsafe areas.", color: "text-emerald-400", bg: "bg-emerald-400/10" },
             { id: 5, title: "Trusted Circle", Icon: Icons.Users, desc: "Live 'Walk With Me' tracking & auto-arrival alerts.", color: "text-pink-400", bg: "bg-pink-400/10" },
             { id: 6, title: "Stealth Tools", Icon: Icons.Ghost, desc: "Fake Call generator & Calculator disguise icon.", color: "text-gray-400", bg: "bg-gray-400/10" },
             { id: 7, title: "Travel Safety", Icon: Icons.Navigation, desc: "Route deviation detection & cab warnings.", color: "text-orange-400", bg: "bg-orange-400/10" },
             { id: 9, title: "Legal & Police", Icon: Icons.Scale, desc: "One-tap helpline (112) & Legal AI chatbot.", color: "text-yellow-400", bg: "bg-yellow-400/10" },
-            { id: 10, title: "Profile Security", Icon: Icons.Lock, desc: "Low-Battery Emergency Mode & Secure Pin.", color: "text-cyan-400", bg: "bg-cyan-400/10" }, // CHANGED: Removed Face Unlock
+            { id: 10, title: "Profile Security", Icon: Icons.Lock, desc: "Low-Battery Emergency Mode & Secure Pin.", color: "text-cyan-400", bg: "bg-cyan-400/10" },
         ];
-        // REMOVED: Community (id:8) and Analytics (id:11)
 
-        // --- COMPONENTS ---
         const FeatureCard = ({ feature }) => (
             <div className="glass-panel p-6 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:scale-[1.02] group">
                 <div className={`mb-4 p-3 rounded-xl w-fit group-hover:scale-110 transition-transform duration-300 ${feature.bg} ${feature.color}`}>
@@ -193,7 +196,6 @@
         const SOSButton = () => {
             const [active, setActive] = useState(false);
             const [countdown, setCountdown] = useState(3);
-
             const handleSOS = () => {
                 if (active) { setActive(false); setCountdown(3); return; }
                 setActive(true);
@@ -204,14 +206,9 @@
                     });
                 }, 1000);
             };
-
             return (
                 <div className="flex flex-col items-center justify-center py-6">
-                    <button 
-                        onClick={handleSOS} 
-                        className={`relative w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_0_50px_rgba(225,29,72,0.3)] 
-                        ${active ? 'bg-red-600 animate-pulse scale-110' : 'bg-gradient-to-br from-rose-600 to-rose-800 hover:scale-105 hover:shadow-[0_0_80px_rgba(225,29,72,0.6)]'}`}
-                    >
+                    <button onClick={handleSOS} className={`relative w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_0_50px_rgba(225,29,72,0.3)] ${active ? 'bg-red-600 animate-pulse scale-110' : 'bg-gradient-to-br from-rose-600 to-rose-800 hover:scale-105 hover:shadow-[0_0_80px_rgba(225,29,72,0.6)]'}`}>
                         <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping-slow"></div>
                         <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_10s_linear_infinite]"></div>
                         <div className="flex flex-col items-center text-white z-10">
@@ -273,16 +270,10 @@
         };
 
         const ChatInterface = () => {
-            const [messages, setMessages] = useState([
-                { id: 1, text: "Hello! I am your AI Legal Assistant. How can I help you today?", sender: 'bot' }
-            ]);
+            const [messages, setMessages] = useState([{ id: 1, text: "Hello! I am your AI Legal Assistant. How can I help you today?", sender: 'bot' }]);
             const [input, setInput] = useState('');
             const messagesEndRef = useRef(null);
-
-            useEffect(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, [messages]);
-
+            useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
             const handleSend = () => {
                 if (!input.trim()) return;
                 setMessages(prev => [...prev, { id: Date.now(), text: input, sender: 'user' }]);
@@ -291,7 +282,6 @@
                     setMessages(prev => [...prev, { id: Date.now()+1, text: "I can help you understand Zero FIR, Domestic Violence Act, or connect you to a nearby station. What do you need?", sender: 'bot' }]);
                 }, 1000);
             };
-
             return (
                 <div className="glass-card rounded-2xl overflow-hidden flex flex-col h-[500px]">
                     <div className="p-4 border-b border-white/10 bg-white/5 flex items-center gap-3">
@@ -315,17 +305,147 @@
                     </div>
                     <div className="p-4 bg-slate-900/50 border-t border-white/10">
                         <div className="flex gap-2">
-                            <input 
-                                type="text" 
-                                value={input} 
-                                onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask about your rights..." 
-                                className="flex-1 bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors"
-                                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                            />
-                            <button onClick={handleSend} className="bg-rose-600 hover:bg-rose-700 text-white p-3 rounded-xl transition-colors shadow-lg shadow-rose-600/20">
-                                <Icons.Send className="w-5 h-5" />
-                            </button>
+                            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about your rights..." className="flex-1 bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors" onKeyPress={(e) => e.key === 'Enter' && handleSend()} />
+                            <button onClick={handleSend} className="bg-rose-600 hover:bg-rose-700 text-white p-3 rounded-xl transition-colors shadow-lg shadow-rose-600/20"><Icons.Send className="w-5 h-5" /></button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- ADVANCED MAP COMPONENT ---
+        const AdvancedMap = () => {
+            const [activeLayers, setActiveLayers] = useState({ heatmap: true, police: true, cctv: false, safeHavens: false });
+            const [selectedZone, setSelectedZone] = useState(null);
+
+            const toggleLayer = (layer) => setActiveLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
+
+            return (
+                <div className="flex flex-col lg:flex-row gap-6 h-[600px] lg:h-[700px] animate-fade-in">
+                    {/* Map Interface */}
+                    <div className="flex-1 glass-card rounded-2xl overflow-hidden relative group">
+                        {/* Map Background Simulation */}
+                        <div className="absolute inset-0 bg-[#0f172a] opacity-90">
+                             <div className="grid grid-cols-8 grid-rows-8 h-full w-full opacity-10">
+                                {[...Array(64)].map((_, i) => <div key={i} className="border border-slate-500"></div>)}
+                            </div>
+                            
+                            {/* Heatmap Layer */}
+                            {activeLayers.heatmap && (
+                                <>
+                                    <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-green-500/20 rounded-full blur-[80px]"></div>
+                                    <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-rose-500/20 rounded-full blur-[80px] animate-pulse"></div>
+                                    <div className="absolute top-1/2 right-1/4 w-40 h-40 bg-yellow-500/10 rounded-full blur-[60px]"></div>
+                                </>
+                            )}
+
+                            {/* Simulated Route */}
+                            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-60">
+                                <path d="M100,500 C200,450 300,550 400,300 S600,100 800,200" fill="none" stroke="#3b82f6" strokeWidth="4" strokeDasharray="10,5" className="animate-[dash_20s_linear_infinite]" />
+                                <circle cx="100" cy="500" r="6" fill="#3b82f6" />
+                                <circle cx="800" cy="200" r="6" fill="#3b82f6" />
+                            </svg>
+
+                            {/* Interactive Markers */}
+                            <div className="absolute top-[35%] left-[28%] cursor-pointer group/marker" onClick={() => setSelectedZone({ name: 'Sector 5 Park', risk: 'Low', lighting: 'Excellent', police: '2 min away', score: 92 })}>
+                                <div className="w-4 h-4 rounded-full bg-green-500 animate-ping absolute"></div>
+                                <div className="w-8 h-8 rounded-full bg-green-500/30 flex items-center justify-center relative border border-green-500">
+                                    <Icons.Shield className="w-4 h-4 text-green-400" />
+                                </div>
+                            </div>
+
+                             <div className="absolute bottom-[30%] right-[35%] cursor-pointer group/marker" onClick={() => setSelectedZone({ name: 'Old Market Road', risk: 'High', lighting: 'Poor', police: '15 min away', score: 45 })}>
+                                <div className="w-4 h-4 rounded-full bg-red-500 animate-ping absolute"></div>
+                                <div className="w-8 h-8 rounded-full bg-red-500/30 flex items-center justify-center relative border border-red-500">
+                                    <Icons.AlertTriangle className="w-4 h-4 text-red-500" />
+                                </div>
+                            </div>
+
+                             {activeLayers.police && (
+                                <div className="absolute top-[20%] right-[20%]">
+                                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/40">
+                                        <Icons.Siren className="w-4 h-4 text-white" />
+                                    </div>
+                                </div>
+                            )}
+
+                             {activeLayers.cctv && (
+                                <div className="absolute bottom-[40%] left-[20%]">
+                                    <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center border border-slate-500">
+                                        <Icons.Camera className="w-4 h-4 text-white" />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* Overlay Controls */}
+                         <div className="absolute top-4 left-4 flex flex-col gap-2">
+                             <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-bold text-white shadow-lg">
+                                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Live Intelligence
+                             </div>
+                             <button className="glass-button p-2 rounded-lg text-white" title="Current Location"><Icons.Navigation className="w-5 h-5" /></button>
+                         </div>
+
+                         {/* Quick Report Buttons */}
+                         <div className="absolute bottom-6 right-6 flex flex-col gap-2">
+                             <button className="bg-rose-600 hover:bg-rose-700 text-white p-3 rounded-full shadow-lg shadow-rose-600/30 transition-transform hover:scale-110" title="Report Emergency"><Icons.Siren className="w-6 h-6" /></button>
+                             <button className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full shadow-lg shadow-yellow-500/30 transition-transform hover:scale-110" title="Report Lighting Issue"><Icons.Zap className="w-6 h-6" /></button>
+                         </div>
+                    </div>
+
+                    {/* Command Center Panel */}
+                    <div className="lg:w-96 glass-card rounded-2xl flex flex-col h-full border-l border-white/10">
+                        <div className="p-6 border-b border-white/10">
+                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                <Icons.Map className="w-5 h-5 text-purple-400" /> Command Center
+                            </h3>
+                            <p className="text-xs text-slate-400 mt-1">Real-time safety data aggregation</p>
+                        </div>
+                        
+                        <div className="p-6 flex-1 overflow-y-auto space-y-6">
+                            
+                            {/* Layer Toggles */}
+                            <div>
+                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Map Layers</h4>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button onClick={() => toggleLayer('heatmap')} className={`p-3 rounded-xl border text-sm font-medium transition-all flex items-center gap-2 ${activeLayers.heatmap ? 'bg-rose-500/20 border-rose-500 text-white' : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10'}`}>
+                                        <div className={`w-2 h-2 rounded-full ${activeLayers.heatmap ? 'bg-rose-500' : 'bg-slate-500'}`}></div> Heatmap
+                                    </button>
+                                    <button onClick={() => toggleLayer('police')} className={`p-3 rounded-xl border text-sm font-medium transition-all flex items-center gap-2 ${activeLayers.police ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10'}`}>
+                                        <div className={`w-2 h-2 rounded-full ${activeLayers.police ? 'bg-blue-500' : 'bg-slate-500'}`}></div> Patrols
+                                    </button>
+                                    <button onClick={() => toggleLayer('cctv')} className={`p-3 rounded-xl border text-sm font-medium transition-all flex items-center gap-2 ${activeLayers.cctv ? 'bg-emerald-500/20 border-emerald-500 text-white' : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10'}`}>
+                                        <div className={`w-2 h-2 rounded-full ${activeLayers.cctv ? 'bg-emerald-500' : 'bg-slate-500'}`}></div> CCTV
+                                    </button>
+                                     <button onClick={() => toggleLayer('safeHavens')} className={`p-3 rounded-xl border text-sm font-medium transition-all flex items-center gap-2 ${activeLayers.safeHavens ? 'bg-yellow-500/20 border-yellow-500 text-white' : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10'}`}>
+                                        <div className={`w-2 h-2 rounded-full ${activeLayers.safeHavens ? 'bg-yellow-500' : 'bg-slate-500'}`}></div> Safe Havens
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Selected Zone Details */}
+                            <div className="glass-panel p-4 rounded-xl border border-white/5">
+                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Zone Analytics</h4>
+                                {selectedZone ? (
+                                    <div className="space-y-3 animate-fade-in">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-lg font-bold text-white">{selectedZone.name}</span>
+                                            <span className={`px-2 py-0.5 rounded text-xs font-bold ${selectedZone.score > 80 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>Score: {selectedZone.score}/100</span>
+                                        </div>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between text-slate-300"><span>Risk Level</span><span className={selectedZone.risk === 'Low' ? 'text-green-400' : 'text-red-400'}>{selectedZone.risk}</span></div>
+                                            <div className="flex justify-between text-slate-300"><span>Lighting</span><span className="text-yellow-400">{selectedZone.lighting}</span></div>
+                                            <div className="flex justify-between text-slate-300"><span>Nearest Patrol</span><span className="text-blue-400">{selectedZone.police}</span></div>
+                                        </div>
+                                        <button className="w-full mt-2 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-xs font-bold transition-colors">View Full Report</button>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-6 text-slate-500 text-sm">
+                                        <Icons.Map className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                        Select a zone on the map to view real-time safety metrics.
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -341,9 +461,9 @@
             const navLinks = [
                 { id: 'home', label: 'Home' }, 
                 { id: 'features', label: 'Features' }, 
+                { id: 'community', label: 'Safety Map' }, // Added back
                 { id: 'legal', label: 'Legal Aid' }
             ];
-            // REMOVED: Community/Safe Zones link
 
             return (
                 <div className="min-h-screen relative z-10 w-full flex flex-col">
@@ -456,7 +576,11 @@
                                                 <SOSButton />
                                             </div>
                                             
-                                            <div className="grid grid-cols-1 gap-3 mt-6 relative z-10">
+                                            <div className="grid grid-cols-2 gap-3 mt-6 relative z-10">
+                                                <button onClick={() => setView('community')} className="glass-panel p-3 rounded-xl flex flex-col items-center gap-2 text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
+                                                    <Icons.Map className="w-6 h-6 text-emerald-400" />
+                                                    <span className="text-xs font-semibold">Map</span>
+                                                </button>
                                                 <button onClick={() => setView('features')} className="glass-panel p-3 rounded-xl flex flex-col items-center gap-2 text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
                                                     <Icons.Users className="w-6 h-6 text-pink-400" />
                                                     <span className="text-xs font-semibold">Circle</span>
@@ -491,6 +615,17 @@
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {FEATURES.map(f => <FeatureCard key={f.id} feature={f} />)}
                                 </div>
+                            </div>
+                        )}
+
+                         {/* VIEW: MAP (NEW ADVANCED) */}
+                         {view === 'community' && (
+                            <div className="max-w-7xl mx-auto animate-fade-in pt-4">
+                                <div className="text-center mb-12">
+                                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Safety Intelligence Map</h2>
+                                    <p className="text-slate-400">Live data aggregation for predictive risk analysis and safe navigation.</p>
+                                </div>
+                                <AdvancedMap />
                             </div>
                         )}
 
