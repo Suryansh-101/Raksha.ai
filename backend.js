@@ -8,12 +8,13 @@
 // --- 1. CONFIGURATION ---
 // Replace with your actual Firebase Config object
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "raksha-app.firebaseapp.com",
-    projectId: "raksha-app",
-    storageBucket: "raksha-app.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCoQFhG5XCFsxEn9IbujCVqEApVqjpiXA0",
+  authDomain: "raksha-945cb.firebaseapp.com",
+  projectId: "raksha-945cb",
+  storageBucket: "raksha-945cb.firebasestorage.app",
+  messagingSenderId: "712885094330",
+  appId: "1:712885094330:web:d53c151bdf3abfe75e3f83",
+  measurementId: "G-4K48CNZCKR"
 };
 
 // Initialize Firebase
