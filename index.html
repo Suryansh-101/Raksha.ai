@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Raksha.ai - Women Safety Portal</title>
     
-    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
     
-    <!-- 3. Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Google Fonts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script src="backend.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -97,14 +99,12 @@
 </head>
 <body class="overflow-x-hidden relative selection:bg-rose-500/30 selection:text-white">
     
-    <!-- Ambient Background -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-50">
         <div class="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-rose-900/20 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[120px] mix-blend-screen"></div>
         <div class="absolute top-[40%] left-[40%] w-[400px] h-[400px] bg-indigo-900/10 rounded-full blur-[100px]"></div>
     </div>
 
-    <!-- React Root -->
     <div id="root" class="relative z-0">
         <div class="h-screen flex items-center justify-center text-rose-500">
              <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-500"></div>
@@ -196,16 +196,38 @@
         const SOSButton = () => {
             const [active, setActive] = useState(false);
             const [countdown, setCountdown] = useState(3);
-            const handleSOS = () => {
-                if (active) { setActive(false); setCountdown(3); return; }
+            
+            // --- CONNECTED BACKEND SOS LOGIC ---
+            const handleSOS = async () => {
+                if (active) { 
+                    setActive(false); 
+                    setCountdown(3); 
+                    return; 
+                }
+                
                 setActive(true);
+                
+                // Countdown visualization
                 let timer = setInterval(() => {
                     setCountdown((prev) => {
-                        if (prev <= 1) { clearInterval(timer); return 0; }
+                        if (prev <= 1) { 
+                            clearInterval(timer); 
+                            return 0; 
+                        }
                         return prev - 1;
                     });
                 }, 1000);
+
+                // --- CALL BACKEND ---
+                // We use the global BackendService defined in backend.js
+                if (window.BackendService && firebase.auth().currentUser) {
+                    console.log("Triggering Backend SOS...");
+                    await window.BackendService.sendSOS(firebase.auth().currentUser, {lat: 28.7041, lng: 77.1025});
+                } else {
+                    console.warn("BackendService not ready or User not logged in");
+                }
             };
+            
             return (
                 <div className="flex flex-col items-center justify-center py-6">
                     <button onClick={handleSOS} className={`relative w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_0_50px_rgba(225,29,72,0.3)] ${active ? 'bg-red-600 animate-pulse scale-110' : 'bg-gradient-to-br from-rose-600 to-rose-800 hover:scale-105 hover:shadow-[0_0_80px_rgba(225,29,72,0.6)]'}`}>
@@ -272,16 +294,39 @@
         const ChatInterface = () => {
             const [messages, setMessages] = useState([{ id: 1, text: "Hello! I am your AI Legal Assistant. How can I help you today?", sender: 'bot' }]);
             const [input, setInput] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
             const messagesEndRef = useRef(null);
+
             useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
-            const handleSend = () => {
+
+            // --- CONNECTED BACKEND CHAT LOGIC ---
+            const handleSend = async () => {
                 if (!input.trim()) return;
-                setMessages(prev => [...prev, { id: Date.now(), text: input, sender: 'user' }]);
+                
+                const userMsg = input;
+                setMessages(prev => [...prev, { id: Date.now(), text: userMsg, sender: 'user' }]);
                 setInput('');
-                setTimeout(() => {
-                    setMessages(prev => [...prev, { id: Date.now()+1, text: "I can help you understand Zero FIR, Domestic Violence Act, or connect you to a nearby station. What do you need?", sender: 'bot' }]);
-                }, 1000);
+                setIsTyping(true);
+
+                // Call the actual Backend Service
+                if (window.BackendService) {
+                    try {
+                        const replyText = await window.BackendService.chatWithAI(userMsg);
+                        setIsTyping(false);
+                        setMessages(prev => [...prev, { id: Date.now()+1, text: replyText, sender: 'bot' }]);
+                    } catch(e) {
+                        setIsTyping(false);
+                        setMessages(prev => [...prev, { id: Date.now()+1, text: "Error connecting to AI service.", sender: 'bot' }]);
+                    }
+                } else {
+                    // Fallback if backend.js didn't load
+                    setTimeout(() => {
+                        setIsTyping(false);
+                        setMessages(prev => [...prev, { id: Date.now()+1, text: "Backend service unreachable.", sender: 'bot' }]);
+                    }, 1000);
+                }
             };
+
             return (
                 <div className="glass-card rounded-2xl overflow-hidden flex flex-col h-[500px]">
                     <div className="p-4 border-b border-white/10 bg-white/5 flex items-center gap-3">
@@ -301,6 +346,7 @@
                                 </div>
                             </div>
                         ))}
+                        {isTyping && <div className="text-xs text-slate-500 ml-4 animate-pulse">AI is typing...</div>}
                         <div ref={messagesEndRef} />
                     </div>
                     <div className="p-4 bg-slate-900/50 border-t border-white/10">
@@ -457,7 +503,22 @@
             const [view, setView] = useState('home');
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
             const [showFakeCall, setShowFakeCall] = useState(false);
+            const [user, setUser] = useState(null);
             
+            // --- AUTH INITIALIZATION ---
+            useEffect(() => {
+                const initBackend = async () => {
+                    if (window.initAuth) {
+                        const currentUser = await window.initAuth();
+                        if (currentUser) {
+                            console.log("User Authenticated:", currentUser.uid);
+                            setUser(currentUser);
+                        }
+                    }
+                };
+                initBackend();
+            }, []);
+
             const navLinks = [
                 { id: 'home', label: 'Home' }, 
                 { id: 'features', label: 'Features' }, 
