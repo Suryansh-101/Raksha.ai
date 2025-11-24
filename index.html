@@ -229,7 +229,6 @@
 <body class="selection:bg-cyan-500/30 selection:text-white">
     
     <!-- DYNAMIC BACKGROUND SYSTEM -->
-    <div class="starfield" id="starfield"></div>
     <div class="aurora-bg"></div>
     <div class="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none z-0 mix-blend-overlay"></div>
     <div class="scanline"></div>
@@ -311,22 +310,30 @@
             return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[1]" />;
         };
 
-        // --- STARFIELD GENERATOR ---
-        useEffect(() => {
-            const container = document.getElementById('starfield');
-            if(container) {
-                for (let i = 0; i < 200; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    star.style.left = `${Math.random() * 100}%`;
-                    star.style.top = `${Math.random() * 100}%`;
-                    star.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                    star.style.animationDelay = `${Math.random() * 5}s`;
-                    star.style.opacity = Math.random();
-                    container.appendChild(star);
+        // --- STARFIELD COMPONENT (Fixed Hook Error) ---
+        const Starfield = () => {
+            const containerRef = useRef(null);
+
+            useEffect(() => {
+                const container = containerRef.current;
+                if (container) {
+                    // Clear existing stars to prevent duplication on re-renders
+                    container.innerHTML = '';
+                    for (let i = 0; i < 200; i++) {
+                        const star = document.createElement('div');
+                        star.className = 'star';
+                        star.style.left = `${Math.random() * 100}%`;
+                        star.style.top = `${Math.random() * 100}%`;
+                        star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                        star.style.animationDelay = `${Math.random() * 5}s`;
+                        star.style.opacity = Math.random();
+                        container.appendChild(star);
+                    }
                 }
-            }
-        }, []);
+            }, []);
+
+            return <div ref={containerRef} className="starfield" />;
+        };
 
         // --- ICONS ---
         const Icons = {
@@ -806,6 +813,7 @@
             return (
                 <div className="min-h-screen relative z-10 w-full flex flex-col pb-12">
                     <MouseTrail />
+                    <Starfield />
                     <StatusHUD />
                     
                     {showFakeCall && <FakeCallInterface onClose={() => setShowFakeCall(false)} />}
