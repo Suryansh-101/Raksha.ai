@@ -153,7 +153,7 @@
         const TransitionWrapper = ({ children, isLoaded }) => {
             const opacityClass = isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5';
             return (
-                <div className={`transition-all duration-700 ease-out ${opacityClass}`}>
+                <div className={transition-all duration-700 ease-out ${opacityClass}}>
                     {children}
                 </div>
             );
@@ -245,7 +245,7 @@
                     </div>
                     
                     <div className="flex items-end gap-2">
-                        <p className={`text-7xl font-extrabold font-mono ${scoreColor}`}>{safetyScore}</p>
+                        <p className={text-7xl font-extrabold font-mono ${scoreColor}}>{safetyScore}</p>
                         <p className="text-3xl font-mono text-gray-500">/100</p>
                     </div>
 
@@ -352,20 +352,20 @@
                 const avatarBg = isCurrentUser ? 'bg-purple-800' : 'bg-gray-900';
                 
                 return (
-                    <div className={`flex items-start max-w-lg ${alignment} gap-3 my-2`}>
+                    <div className={flex items-start max-w-lg ${alignment} gap-3 my-2}>
                         {!isCurrentUser && (
-                            <div className={`p-2 rounded-full ${avatarBg} text-xs text-gray-400 font-mono`}>
+                            <div className={p-2 rounded-full ${avatarBg} text-xs text-gray-400 font-mono}>
                                 AI
                             </div>
                         )}
-                        <div className={`p-4 rounded-xl ${color} shadow-md`}>
+                        <div className={p-4 rounded-xl ${color} shadow-md}>
                             <p className="text-sm text-white break-words">{message.content}</p>
                             <p className="text-xs text-gray-300 opacity-60 mt-1 text-right">
                                 {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </p>
                         </div>
                         {isCurrentUser && (
-                            <div className={`p-2 rounded-full ${avatarBg} text-xs text-gray-400 font-mono`}>
+                            <div className={p-2 rounded-full ${avatarBg} text-xs text-gray-400 font-mono}>
                                 You
                             </div>
                         )}
