@@ -3,7 +3,7 @@
 // ==========================================
 // Instructions: 
 // 1. This script mocks a backend using Browser LocalStorage.
-// 2. No internet connection or API keys are required.
+// 2. It also MOCKS Firebase so your HTML doesn't crash without API keys.
 
 console.log("⚠️ RUNNING IN OFFLINE DEMO MODE");
 
@@ -30,19 +30,29 @@ const seedDatabase = () => {
 seedDatabase();
 
 // --- 2. AUTHENTICATION SERVICE (MOCK) ---
+const MOCK_USER = {
+    uid: "offline-user-123",
+    email: "demo@raksha.ai",
+    displayName: "Aarohi (Offline)",
+    isAnonymous: true
+};
+
 window.initAuth = async () => {
     // Simulate network delay
     await new Promise(r => setTimeout(r, 500));
-    
-    const mockUser = {
-        uid: "offline-user-123",
-        email: "demo@raksha.ai",
-        displayName: "Aarohi (Offline)",
-        isAnonymous: true
-    };
-    
-    console.log("Auth: Logged in as", mockUser.displayName);
-    return mockUser;
+    console.log("Auth: Logged in as", MOCK_USER.displayName);
+    return MOCK_USER;
+};
+
+// --- FIX: MOCK FIREBASE GLOBAL OBJECT ---
+// This is required because index4.html calls firebase.auth().currentUser
+// Since we are offline, we must fake this object to prevent crashes.
+window.firebase = {
+    auth: () => ({
+        currentUser: MOCK_USER
+    }),
+    firestore: () => ({}),
+    app: () => ({})
 };
 
 // --- 3. BACKEND API SERVICES (MOCK) ---
@@ -50,9 +60,10 @@ window.BackendService = {
     
     // Feature: Send SOS & Upload Evidence
     sendSOS: async (user, locationData) => {
-        if (!user) return;
+        // Handle case where user might be null or the mock user
+        const currentUser = user || MOCK_USER;
         
-        console.log("Backend: Processing SOS...");
+        console.log("Backend: Processing SOS for", currentUser.uid);
         await new Promise(r => setTimeout(r, 1500)); // Fake processing delay
 
         try {
@@ -88,31 +99,12 @@ window.BackendService = {
         // 2. Return data immediately
         callback(data);
 
-        // 3. Mock Real-time updates (Optional: Add a random point every 10 seconds)
-        // This is just to show the UI "updating" live during a demo
-        /*
-        const interval = setInterval(() => {
-            const randomType = Math.random() > 0.5 ? 'safe' : 'danger';
-            const newDataPoint = {
-                id: Date.now().toString(),
-                type: randomType,
-                lat: 28.5 + (Math.random() * 0.01),
-                lng: 77.2 + (Math.random() * 0.01),
-                verified: false
-            };
-            // In a real app, we would merge this, but here we just re-fetch
-            const currentData = JSON.parse(localStorage.getItem(DB_KEYS.LOCATIONS) || "[]");
-            callback([...currentData, newDataPoint]); 
-        }, 10000);
-        return () => clearInterval(interval); // Unsubscribe function
-        */
-
         return () => {}; // No-op unsubscribe for static demo
     },
 
     // Feature: Report an Incident
     reportIncident: async (user, type, lat, lng) => {
-        if(!user) return;
+        const currentUser = user || MOCK_USER;
         await new Promise(r => setTimeout(r, 600)); // Delay
 
         const newReport = {
@@ -120,7 +112,7 @@ window.BackendService = {
             type: type, // 'safe' or 'danger'
             lat: lat,
             lng: lng,
-            reportedBy: user.uid,
+            reportedBy: currentUser.uid,
             timestamp: new Date().toISOString(),
             verified: false
         };
@@ -155,9 +147,6 @@ window.BackendService = {
         // Return existing alerts immediately
         const alerts = JSON.parse(localStorage.getItem(DB_KEYS.ALERTS) || "[]");
         callback(alerts);
-
-        // Mock listening for "new" alerts coming from other devices
-        // For the hackathon demo, we just rely on page refresh or local state
         return () => {};
     }
 };
