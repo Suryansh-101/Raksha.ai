@@ -1,77 +1,76 @@
 // ==========================================
-// --- APP.XYZ / BACKEND.JS ---
+// --- APP.XYZ / BACKEND.JS (OFFLINE MODE) ---
 // ==========================================
 // Instructions: 
-// 1. Include Firebase SDKs in your HTML <head> before this script.
-// 2. This script initializes Firebase and exposes a global 'BackendService'.
+// 1. This script mocks a backend using Browser LocalStorage.
+// 2. No internet connection or API keys are required.
 
-// --- 1. CONFIGURATION ---
-// Replace with your actual Firebase Config object
-const firebaseConfig = {
-    apiKey: "AIzaSyCoQFhG5XCFsxEn9IbujCVqEApVqjpiXA0",
-  authDomain: "raksha-945cb.firebaseapp.com",
-  projectId: "raksha-945cb",
-  storageBucket: "raksha-945cb.firebasestorage.app",
-  messagingSenderId: "712885094330",
-  appId: "1:712885094330:web:d53c151bdf3abfe75e3f83",
-  measurementId: "G-4K48CNZCKR"
+console.log("⚠️ RUNNING IN OFFLINE DEMO MODE");
+
+// --- 1. LOCAL STORAGE HELPERS ---
+const DB_KEYS = {
+    ALERTS: 'raksha_alerts_v1',
+    LOCATIONS: 'raksha_locations_v1',
+    USER: 'raksha_user_v1'
 };
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp("AIzaSyCoQFhG5XCFsxEn9IbujCVqEApVqjpiXA0");
-}
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// --- 2. AUTHENTICATION SERVICE ---
-// Helper to handle anonymous or custom token login
-window.initAuth = async (customToken) => {
-    try {
-        if (customToken) {
-            await auth.signInWithCustomToken(customToken);
-        } else {
-            await auth.signInAnonymously();
-        }
-        return auth.currentUser;
-    } catch (error) {
-        console.error("Auth Error:", error);
-        return null;
+// Seed initial data if empty
+const seedDatabase = () => {
+    if (!localStorage.getItem(DB_KEYS.LOCATIONS)) {
+        const initialLocations = [
+            { id: '1', type: 'safe', lat: 28.5, lng: 77.2, verified: true, timestamp: Date.now() },
+            { id: '2', type: 'danger', lat: 28.51, lng: 77.21, verified: false, timestamp: Date.now() }
+        ];
+        localStorage.setItem(DB_KEYS.LOCATIONS, JSON.stringify(initialLocations));
+    }
+    if (!localStorage.getItem(DB_KEYS.ALERTS)) {
+        localStorage.setItem(DB_KEYS.ALERTS, JSON.stringify([]));
     }
 };
+seedDatabase();
 
-// --- 3. BACKEND API SERVICES ---
+// --- 2. AUTHENTICATION SERVICE (MOCK) ---
+window.initAuth = async () => {
+    // Simulate network delay
+    await new Promise(r => setTimeout(r, 500));
+    
+    const mockUser = {
+        uid: "offline-user-123",
+        email: "demo@raksha.ai",
+        displayName: "Aarohi (Offline)",
+        isAnonymous: true
+    };
+    
+    console.log("Auth: Logged in as", mockUser.displayName);
+    return mockUser;
+};
+
+// --- 3. BACKEND API SERVICES (MOCK) ---
 window.BackendService = {
     
     // Feature: Send SOS & Upload Evidence
-    // Usage: BackendService.sendSOS(user, {lat: 28.5, lng: 77.2});
     sendSOS: async (user, locationData) => {
         if (!user) return;
-        const appId = 'default-app-id'; // Replace with dynamic ID if needed
+        
+        console.log("Backend: Processing SOS...");
+        await new Promise(r => setTimeout(r, 1500)); // Fake processing delay
 
         try {
-            // 1. Create Alert in Firestore
-            await db.collection('artifacts').doc(appId)
-                .collection('users').doc(user.uid)
-                .collection('alerts').add({
-                    type: 'SOS',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: 'ACTIVE',
-                    location: locationData || { lat: 0, lng: 0 },
-                    deviceStatus: { battery: 45, network: '4G' } // Mock device stats
-                });
-            
-            // 2. Create Evidence Record (Simulating file upload metadata)
-            await db.collection('artifacts').doc(appId)
-                .collection('users').doc(user.uid)
-                .collection('evidence').add({
-                    type: 'AUDIO_VIDEO',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    url: 'https://storage.googleapis.com/demo-evidence/rec-001.mp4', // Mock URL
-                    duration: '30s'
-                });
+            const newAlert = {
+                id: Date.now().toString(),
+                type: 'SOS',
+                timestamp: new Date().toISOString(),
+                status: 'ACTIVE',
+                location: locationData || { lat: 0, lng: 0 },
+                deviceStatus: { battery: 45, network: 'Offline Demo' }
+            };
 
-            console.log("SUCCESS: SOS sent and evidence logged to backend.");
+            // Save to LocalStorage
+            const alerts = JSON.parse(localStorage.getItem(DB_KEYS.ALERTS) || "[]");
+            alerts.unshift(newAlert); // Add to top
+            localStorage.setItem(DB_KEYS.ALERTS, JSON.stringify(alerts));
+            
+            console.log("SUCCESS: SOS sent locally.");
             return true;
         } catch (error) {
             console.error("BACKEND ERROR (SOS):", error);
@@ -80,74 +79,85 @@ window.BackendService = {
     },
 
     // Feature: Public Safety Map
-    // Usage: const unsubscribe = BackendService.getSafeZones((data) => { ... });
     getSafeZones: (callback) => {
-        const appId = 'default-app-id';
-        // Real-time listener for public safety data
-        return db.collection('artifacts').doc(appId)
-            .collection('public').doc('data')
-            .collection('locations')
-            .limit(50)
-            .onSnapshot(snapshot => {
-                const data = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
-                callback(data);
-            }, error => {
-                console.error("BACKEND ERROR (Map):", error);
-                callback([]); // Return empty on error
-            });
+        console.log("Backend: Fetching Map Data...");
+        
+        // 1. Get data from LocalStorage
+        const data = JSON.parse(localStorage.getItem(DB_KEYS.LOCATIONS) || "[]");
+        
+        // 2. Return data immediately
+        callback(data);
+
+        // 3. Mock Real-time updates (Optional: Add a random point every 10 seconds)
+        // This is just to show the UI "updating" live during a demo
+        /*
+        const interval = setInterval(() => {
+            const randomType = Math.random() > 0.5 ? 'safe' : 'danger';
+            const newDataPoint = {
+                id: Date.now().toString(),
+                type: randomType,
+                lat: 28.5 + (Math.random() * 0.01),
+                lng: 77.2 + (Math.random() * 0.01),
+                verified: false
+            };
+            // In a real app, we would merge this, but here we just re-fetch
+            const currentData = JSON.parse(localStorage.getItem(DB_KEYS.LOCATIONS) || "[]");
+            callback([...currentData, newDataPoint]); 
+        }, 10000);
+        return () => clearInterval(interval); // Unsubscribe function
+        */
+
+        return () => {}; // No-op unsubscribe for static demo
     },
 
     // Feature: Report an Incident
     reportIncident: async (user, type, lat, lng) => {
         if(!user) return;
-        const appId = 'default-app-id';
-        try {
-            await db.collection('artifacts').doc(appId)
-                .collection('public').doc('data')
-                .collection('locations').add({
-                    type: type, // 'safe' or 'danger'
-                    lat: lat,
-                    lng: lng,
-                    reportedBy: user.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    verified: false
-                });
-            console.log("SUCCESS: Incident reported.");
-        } catch (error) {
-            console.error("BACKEND ERROR (Report):", error);
-        }
+        await new Promise(r => setTimeout(r, 600)); // Delay
+
+        const newReport = {
+            id: Date.now().toString(),
+            type: type, // 'safe' or 'danger'
+            lat: lat,
+            lng: lng,
+            reportedBy: user.uid,
+            timestamp: new Date().toISOString(),
+            verified: false
+        };
+
+        const locations = JSON.parse(localStorage.getItem(DB_KEYS.LOCATIONS) || "[]");
+        locations.push(newReport);
+        localStorage.setItem(DB_KEYS.LOCATIONS, JSON.stringify(locations));
+        
+        console.log(`SUCCESS: Reported ${type} zone locally.`);
     },
 
     // Feature: AI Legal Chatbot
-    // Usage: const reply = await BackendService.chatWithAI("What is a Zero FIR?");
     chatWithAI: async (message) => {
         // Simulating AI processing time
         await new Promise(r => setTimeout(r, 800));
         
         const lowerMsg = message.toLowerCase();
         
-        // Simple Rule-based Logic (Replace with actual LLM API call if available)
+        // Local Logic Rule Engine
         if (lowerMsg.includes('fir')) return "A Zero FIR can be filed in any police station regardless of jurisdiction. If they refuse, cite Section 154 of CrPC.";
         if (lowerMsg.includes('stalk') || lowerMsg.includes('follow')) return "Stalking is a crime under Section 354D of the IPC. You can report this online at cybercrime.gov.in or dial 1091.";
-        if (lowerMsg.includes('domestic') || lowerMsg.includes('husband') || lowerMsg.includes('beat')) return "The Protection of Women from Domestic Violence Act, 2005 protects you. You can seek a Protection Order from a Magistrate.";
-        if (lowerMsg.includes('night') || lowerMsg.includes('work')) return "Under the Shops and Establishments Act, women have the right to safe transport if working after 7 PM.";
+        if (lowerMsg.includes('domestic') || lowerMsg.includes('husband') || lowerMsg.includes('beat') || lowerMsg.includes('hit')) return "The Protection of Women from Domestic Violence Act, 2005 protects you. You can seek a Protection Order from a Magistrate.";
+        if (lowerMsg.includes('night') || lowerMsg.includes('work') || lowerMsg.includes('office')) return "Under the Shops and Establishments Act, women have the right to safe transport if working after 7 PM.";
         if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) return "Hello. I am your Legal AI Assistant. You can ask me about FIRs, stalking laws, domestic violence rights, or emergency numbers.";
+        if (lowerMsg.includes('help')) return "If you are in immediate danger, please use the SOS button or dial 112. For legal advice, ask me about specific laws.";
         
         return "I can provide legal information regarding women's safety. Could you be more specific? (Try asking about 'FIR', 'Stalking', or 'Domestic Violence')";
     },
 
     // Feature: User Alerts Subscription
     subscribeToAlerts: (user, callback) => {
-        if (!user) return () => {};
-        const appId = 'default-app-id';
-        return db.collection('artifacts').doc(appId)
-            .collection('users').doc(user.uid)
-            .collection('alerts')
-            .orderBy('timestamp', 'desc')
-            .limit(1)
-            .onSnapshot(snapshot => {
-                const alerts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                callback(alerts);
-            });
+        // Return existing alerts immediately
+        const alerts = JSON.parse(localStorage.getItem(DB_KEYS.ALERTS) || "[]");
+        callback(alerts);
+
+        // Mock listening for "new" alerts coming from other devices
+        // For the hackathon demo, we just rely on page refresh or local state
+        return () => {};
     }
 };
