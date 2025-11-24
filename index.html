@@ -24,128 +24,155 @@
     <style>
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #03030a; 
+            background-color: #020205; 
             color: #e2e8f0; 
             overflow-x: hidden;
         }
         
-        /* --- ADVANCED UTILITIES --- */
+        /* --- ADVANCED UTILITIES & TEXTURES --- */
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
+        /* Noise Texture for Cinematic Feel */
+        .bg-noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiAvPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMzMzIiBvcGFjaXR5PSIwLjEiIC8+Cjwvc3ZnPg==');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Ultimate Glass Panel */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         
+        /* Premium Card with Spotlight effect logic handled in CSS/JS */
         .glass-card {
-            background: rgba(10, 10, 20, 0.7);
+            background: rgba(13, 13, 23, 0.6);
             backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .glass-button {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .glass-button:hover {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
-            border-color: rgba(225, 29, 72, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(225, 29, 72, 0.2);
             transform: translateY(-2px);
         }
 
-        /* --- NEW ANIMATIONS --- */
+        /* --- NEW: FLOWING TEXT ANIMATION (REPLACES SHAKE) --- */
+        .text-flow {
+            background: linear-gradient(
+                to right,
+                #fff 20%,
+                #f43f5e 40%,
+                #a855f7 60%,
+                #fff 80%
+            );
+            background-size: 200% auto;
+            color: #000;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textFlow 5s linear infinite;
+        }
+        @keyframes textFlow {
+            to { background-position: 200% center; }
+        }
+
+        /* --- ANIMATIONS --- */
         @keyframes radar-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .animate-radar { animation: radar-spin 4s linear infinite; }
+        .animate-radar { animation: radar-spin 6s linear infinite; }
 
         @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
+            0% { transform: translateY(-100%); opacity: 0.5; }
+            50% { opacity: 0.2; }
+            100% { transform: translateY(100vh); opacity: 0.5; }
         }
         .scanline {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(225, 29, 72, 0.05) 51%, transparent 51%);
-            background-size: 100% 4px;
-            animation: scanline 8s linear infinite;
+            background: linear-gradient(to bottom, transparent 40%, rgba(225, 29, 72, 0.1) 50%, transparent 60%);
+            background-size: 100% 3px;
+            animation: scanline 6s linear infinite;
             pointer-events: none;
             z-index: 50;
         }
 
         @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(2.5); opacity: 0; }
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(2.2); opacity: 0; }
         }
         .pulse-ring::before {
             content: '';
             position: absolute;
             left: 0; top: 0; right: 0; bottom: 0;
             border-radius: 50%;
-            border: 2px solid #e11d48;
-            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            border: 1px solid #e11d48;
+            box-shadow: 0 0 10px #e11d48;
+            animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-        .glitch-hover:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
 
         @keyframes ticker {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
-        .animate-ticker { animation: ticker 30s linear infinite; }
-
-        /* Sound Wave Animation */
-        .sound-wave-bar {
-            animation: sound-wave 1s ease-in-out infinite;
-        }
-        @keyframes sound-wave {
-            0%, 100% { height: 20%; }
-            50% { height: 100%; }
-        }
+        .animate-ticker { animation: ticker 40s linear infinite; }
 
         /* Original Animations */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
         @keyframes ping-slow { 75%, 100% { transform: scale(2); opacity: 0; } }
         .animate-ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
-        @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(30px); filter: blur(10px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
         .animate-fade-in { animation: fade-in-up 0.8s ease-out forwards; }
         @keyframes fall {
             0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
             100% { transform: translateY(110vh) translateX(20px) rotate(360deg); opacity: 0; }
         }
         .falling-item { position: absolute; top: -10%; pointer-events: none; animation: fall linear infinite; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050511; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
 <body class="selection:bg-rose-500/30 selection:text-white">
     
     <!-- Cinematic Background -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-50 bg-[#03030a]">
-        <div class="absolute top-[-10%] left-[-10%] w-[1000px] h-[1000px] bg-rose-900/10 rounded-full blur-[150px] mix-blend-screen animate-pulse"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[150px] mix-blend-screen"></div>
-        <div class="absolute top-[30%] left-[50%] transform -translate-x-1/2 w-[600px] h-[600px] bg-indigo-900/10 rounded-full blur-[120px]"></div>
+    <div class="bg-noise"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-50 bg-[#020205]">
+        <!-- Dynamic Orbs -->
+        <div class="absolute top-[-20%] left-[-10%] w-[1200px] h-[1200px] bg-rose-600/5 rounded-full blur-[180px] mix-blend-screen animate-pulse"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[1000px] h-[1000px] bg-indigo-600/5 rounded-full blur-[180px] mix-blend-screen"></div>
+        <div class="absolute top-[20%] left-[40%] transform -translate-x-1/2 w-[800px] h-[800px] bg-purple-600/5 rounded-full blur-[150px]"></div>
+        
+        <!-- Grid Floor -->
+        <div class="absolute bottom-0 left-0 w-full h-[50vh] bg-gradient-to-t from-[#020205] to-transparent z-0"></div>
+        <div class="absolute bottom-0 w-full h-full opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px); background-size: 50px 50px; perspective: 1000px; transform: rotateX(60deg) translateY(200px) scale(2);"></div>
+        
         <div class="scanline"></div>
     </div>
 
-    <div id="root" class="relative z-0 h-full"></div>
+    <div id="root" class="relative z-10 h-full"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -214,21 +241,23 @@
 
             return (
                 <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center font-mono text-rose-500 p-8">
-                    <div className="w-full max-w-md space-y-4">
-                        <div className="flex justify-between items-end border-b border-rose-900 pb-2 mb-4">
-                            <span className="text-2xl font-bold tracking-widest">RAKSHA.SYS</span>
-                            <span className="text-xs animate-pulse">V4.2.0 BETA</span>
+                    <div className="w-full max-w-md space-y-4 relative">
+                        {/* Decorative Boot Elements */}
+                        <div className="absolute -top-10 left-0 text-xs text-slate-600">SYS_ID: 884-XJ</div>
+                        <div className="flex justify-between items-end border-b border-rose-900/50 pb-2 mb-4">
+                            <span className="text-2xl font-bold tracking-widest text-white">RAKSHA.OS</span>
+                            <span className="text-xs animate-pulse text-rose-400">V4.2.0 BETA</span>
                         </div>
-                        <div className="h-64 overflow-hidden space-y-2 text-sm opacity-80">
+                        <div className="h-64 overflow-hidden space-y-2 text-sm">
                             {logs.map((log, i) => (
-                                <div key={i} className="flex gap-2">
-                                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                                    <span className="animate-fade-in text-white">{log}</span>
+                                <div key={i} className="flex gap-3 font-mono text-xs">
+                                    <span className="text-slate-500">[{new Date().toLocaleTimeString()}]</span>
+                                    <span className="animate-fade-in text-emerald-400">>> {log}</span>
                                 </div>
                             ))}
                         </div>
-                        <div className="h-1 w-full bg-gray-900 rounded-full overflow-hidden">
-                            <div className="h-full bg-rose-500 transition-all duration-300" style={{width: `${progress}%`}}></div>
+                        <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-rose-600 to-purple-600 transition-all duration-300" style={{width: `${progress}%`}}></div>
                         </div>
                     </div>
                 </div>
@@ -246,41 +275,41 @@
             }, []);
 
             return (
-                <div className="hidden lg:flex fixed top-4 right-6 gap-6 z-40 font-mono text-xs text-slate-400 glass-panel px-4 py-2 rounded-full">
+                <div className="hidden lg:flex fixed top-6 right-8 gap-6 z-40 font-mono text-[10px] tracking-widest text-slate-400 glass-panel px-6 py-3 rounded-full uppercase">
                     <div className="flex items-center gap-2">
-                        <Icons.Activity className="w-4 h-4 text-emerald-500 animate-pulse" />
-                        <span>SYSTEM: OPTIMAL</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span className="text-emerald-500 font-bold">System Online</span>
                     </div>
-                    <div className="w-px h-4 bg-white/10"></div>
+                    <div className="w-px h-3 bg-white/10"></div>
                     <div className="flex items-center gap-2">
-                        <Icons.Wifi className="w-4 h-4 text-white" />
-                        <span>5G ENCRYPTED</span>
+                        <Icons.Wifi className="w-3 h-3 text-white" />
+                        <span>Encrypted</span>
                     </div>
-                    <div className="w-px h-4 bg-white/10"></div>
+                    <div className="w-px h-3 bg-white/10"></div>
                     <div className="flex items-center gap-2">
-                        <Icons.Battery className="w-4 h-4 text-white" />
+                        <Icons.Battery className="w-3 h-3 text-white" />
                         <span>{battery}%</span>
                     </div>
-                    <div className="w-px h-4 bg-white/10"></div>
-                    <span className="text-white">{time}</span>
+                    <div className="w-px h-3 bg-white/10"></div>
+                    <span className="text-white font-bold">{time}</span>
                 </div>
             );
         };
 
         // --- NEW: LIVE THREAT TICKER ---
         const LiveTicker = () => (
-            <div className="fixed bottom-0 left-0 w-full bg-black/80 backdrop-blur-md border-t border-rose-500/30 z-40 overflow-hidden py-2">
-                <div className="flex animate-ticker whitespace-nowrap gap-12 text-xs font-mono font-bold tracking-wide">
-                    <span className="text-rose-500 flex items-center gap-2"><Icons.AlertTriangle className="w-3 h-3" /> ALERT: Unsafe activity reported in Sector 9</span>
-                    <span className="text-emerald-500 flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3" /> UPDATE: Police Patrol active on Main Street</span>
-                    <span className="text-blue-400 flex items-center gap-2"><Icons.Info className="w-3 h-3" /> TIP: Share live location when traveling late</span>
-                    <span className="text-rose-500 flex items-center gap-2"><Icons.AlertTriangle className="w-3 h-3" /> ALERT: Heavy traffic near University Road</span>
-                     <span className="text-emerald-500 flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3" /> UPDATE: New Safe Zone added: Central Library</span>
+            <div className="fixed bottom-0 left-0 w-full bg-[#050511]/90 backdrop-blur-md border-t border-white/5 z-40 overflow-hidden py-2.5">
+                <div className="flex animate-ticker whitespace-nowrap gap-16 text-xs font-mono font-bold tracking-widest uppercase opacity-80">
+                    <span className="text-rose-400 flex items-center gap-3"><Icons.AlertTriangle className="w-3 h-3" /> ALERT: Unsafe activity reported in Sector 9</span>
+                    <span className="text-emerald-400 flex items-center gap-3"><Icons.CheckCircle className="w-3 h-3" /> UPDATE: Police Patrol active on Main Street</span>
+                    <span className="text-blue-400 flex items-center gap-3"><Icons.Info className="w-3 h-3" /> TIP: Share live location when traveling late</span>
+                    <span className="text-rose-400 flex items-center gap-3"><Icons.AlertTriangle className="w-3 h-3" /> ALERT: Heavy traffic near University Road</span>
+                     <span className="text-emerald-400 flex items-center gap-3"><Icons.CheckCircle className="w-3 h-3" /> UPDATE: New Safe Zone added: Central Library</span>
                 </div>
             </div>
         );
 
-        // --- FALLING ANIMATION (Preserved & Enhanced) ---
+        // --- FALLING ANIMATION ---
         const FallingAnimation = () => {
             const [items, setItems] = useState([]);
             useEffect(() => {
@@ -300,7 +329,7 @@
             return (
                 <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
                     {items.map((item) => (
-                        <div key={item.id} className={`falling-item ${item.color} opacity-20`} style={{ left: item.left, animationDuration: item.animationDuration, animationDelay: item.animationDelay }}>
+                        <div key={item.id} className={`falling-item ${item.color} opacity-10`} style={{ left: item.left, animationDuration: item.animationDuration, animationDelay: item.animationDelay }}>
                             <item.IconComponent style={{ width: item.size, height: item.size }} />
                         </div>
                     ))}
@@ -321,12 +350,13 @@
         ];
 
         const FeatureCard = ({ feature }) => (
-            <div className="glass-panel p-6 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:scale-[1.02] group border border-white/5 hover:border-rose-500/30">
-                <div className={`mb-4 p-3 rounded-xl w-fit group-hover:scale-110 transition-transform duration-300 ${feature.bg} ${feature.color}`}>
-                    <feature.Icon className="w-6 h-6" />
+            <div className="glass-card p-8 rounded-3xl hover:border-white/20 group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className={`mb-6 p-4 rounded-2xl w-fit group-hover:scale-110 transition-transform duration-500 ${feature.bg} ${feature.color} relative z-10`}>
+                    <feature.Icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{feature.desc}</p>
+                <h3 className="text-xl font-bold text-white mb-3 relative z-10">{feature.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed relative z-10">{feature.desc}</p>
             </div>
         );
 
@@ -360,22 +390,23 @@
                         </div>
                     )}
 
-                    <button onClick={handleSOS} className={`relative z-10 w-36 h-36 md:w-44 md:h-44 rounded-full flex items-center justify-center transition-all duration-500 ${active ? 'bg-red-600 scale-110 shadow-[0_0_100px_rgba(220,38,38,0.6)]' : 'bg-gradient-to-b from-rose-600 to-rose-900 hover:scale-105 hover:shadow-[0_0_60px_rgba(225,29,72,0.4)]'} group`}>
+                    <button onClick={handleSOS} className={`relative z-10 w-40 h-40 md:w-48 md:h-48 rounded-full flex items-center justify-center transition-all duration-500 ${active ? 'bg-rose-600 scale-110 shadow-[0_0_120px_rgba(225,29,72,0.6)]' : 'bg-gradient-to-b from-rose-600 to-rose-900 hover:scale-105 hover:shadow-[0_0_80px_rgba(225,29,72,0.4)]'} group overflow-hidden`}>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                         <div className="absolute inset-0 rounded-full border-4 border-white/10 animate-[spin_10s_linear_infinite] border-t-white/40"></div>
-                        <div className="absolute inset-2 rounded-full border border-white/20"></div>
+                        <div className="absolute inset-3 rounded-full border border-white/20"></div>
                         
                         <div className="flex flex-col items-center text-white z-20">
-                            <Icons.Siren className={`w-10 h-10 mb-2 transition-transform ${active ? 'animate-bounce' : 'group-hover:rotate-12'}`} />
-                            <span className="text-2xl font-black tracking-widest font-mono">SOS</span>
-                            {active && <span className="text-xs font-bold mt-1 bg-black/40 px-3 py-1 rounded-full backdrop-blur-md border border-red-400/50 font-mono">{countdown > 0 ? `SENDING ${countdown}s` : 'TRANSMITTING'}</span>}
+                            <Icons.Siren className={`w-12 h-12 mb-2 transition-transform ${active ? 'animate-bounce' : 'group-hover:rotate-12'}`} />
+                            <span className="text-3xl font-black tracking-widest font-mono">SOS</span>
+                            {active && <span className="text-[10px] font-bold mt-2 bg-black/60 px-3 py-1 rounded-full backdrop-blur-md border border-red-400/50 font-mono tracking-widest uppercase">{countdown > 0 ? `SENDING ${countdown}s` : 'TRANSMITTING'}</span>}
                         </div>
                     </button>
-                    <p className="mt-8 text-slate-400 text-center max-w-[200px] text-xs font-medium opacity-70 tracking-wide uppercase">Hold for 3s to cancel</p>
+                    <p className="mt-10 text-slate-500 text-center max-w-[200px] text-[10px] font-bold opacity-60 tracking-[0.2em] uppercase">Press & Hold for Emergency</p>
                 </div>
             );
         };
 
-        // --- FAKE CALL (Preserved) ---
+        // --- FAKE CALL ---
         const FakeCallInterface = ({ onClose }) => {
             const [status, setStatus] = useState('incoming');
             return (
@@ -383,7 +414,7 @@
                     {status === 'incoming' ? (
                         <>
                             <div className="flex flex-col items-center mt-20 animate-float">
-                                <div className="w-32 h-32 bg-gradient-to-b from-slate-200 to-slate-400 rounded-full flex items-center justify-center mb-8 shadow-2xl overflow-hidden">
+                                <div className="w-32 h-32 bg-gradient-to-b from-slate-200 to-slate-400 rounded-full flex items-center justify-center mb-8 shadow-2xl overflow-hidden ring-4 ring-white/10">
                                     <Icons.Users className="w-16 h-16 text-slate-600" />
                                 </div>
                                 <h2 className="text-5xl font-light tracking-tight mb-2">Mom</h2>
@@ -391,13 +422,13 @@
                             </div>
                             <div className="w-full px-12 mb-20 flex justify-between items-center max-w-md">
                                 <button onClick={onClose} className="flex flex-col items-center gap-4 group">
-                                    <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-red-500/30">
+                                    <div className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-rose-500/30">
                                         <Icons.PhoneOff className="w-8 h-8 fill-current" />
                                     </div>
                                     <span className="text-sm font-medium opacity-80">Decline</span>
                                 </button>
                                 <button onClick={() => setStatus('connected')} className="flex flex-col items-center gap-4 group">
-                                    <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-green-500/30 animate-bounce">
+                                    <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-emerald-500/30 animate-bounce">
                                         <Icons.Phone className="w-8 h-8 fill-current" />
                                     </div>
                                     <span className="text-sm font-medium opacity-80">Accept</span>
@@ -412,10 +443,10 @@
                                <p className="text-xl mt-4 text-emerald-400 font-mono">00:12</p>
                            </div>
                            <div className="mb-20 grid grid-cols-3 gap-8">
-                               {[1,2,3,4,5,6].map(i => <div key={i} className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-sm"><div className="w-2 h-2 bg-white rounded-full"></div></div>)}
+                               {[1,2,3,4,5,6].map(i => <div key={i} className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-sm border border-white/5"><div className="w-2 h-2 bg-white rounded-full"></div></div>)}
                            </div>
                            <div className="mb-20">
-                               <button onClick={onClose} className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto hover:bg-red-600 shadow-xl shadow-red-500/30"><Icons.PhoneOff className="w-10 h-10 fill-current" /></button>
+                               <button onClick={onClose} className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center mx-auto hover:bg-rose-600 shadow-xl shadow-rose-500/30"><Icons.PhoneOff className="w-10 h-10 fill-current" /></button>
                            </div>
                         </>
                     )}
@@ -423,7 +454,7 @@
             );
         };
 
-        // --- CHAT INTERFACE (Preserved & Styled) ---
+        // --- CHAT INTERFACE ---
         const ChatInterface = () => {
             const [messages, setMessages] = useState([{ id: 1, text: "Hello! I am your AI Legal Assistant. How can I help you today?", sender: 'bot' }]);
             const [input, setInput] = useState('');
@@ -457,39 +488,39 @@
             };
 
             return (
-                <div className="glass-card rounded-2xl overflow-hidden flex flex-col h-[600px] border border-white/10 relative">
+                <div className="glass-card rounded-[2rem] overflow-hidden flex flex-col h-[650px] relative border border-white/10">
                     <div className="absolute inset-0 bg-gradient-to-b from-rose-500/5 to-transparent pointer-events-none"></div>
-                    <div className="p-4 border-b border-white/10 bg-black/40 flex items-center gap-4 backdrop-blur-md">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-rose-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <Icons.Scale className="w-6 h-6 text-white" />
+                    <div className="p-6 border-b border-white/5 bg-black/20 flex items-center gap-5 backdrop-blur-md">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <Icons.Scale className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-white tracking-wide">Legal AI Assistant</h3>
-                            <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span className="text-xs text-emerald-400 font-mono">SYSTEM ONLINE</span></div>
+                            <h3 className="font-bold text-white tracking-wide text-lg">Legal AI Assistant</h3>
+                            <div className="flex items-center gap-2 mt-1"><span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span className="text-[10px] text-emerald-400 font-mono tracking-widest uppercase">System Online</span></div>
                         </div>
                     </div>
-                    <div className="flex-1 p-6 overflow-y-auto space-y-6 scrollbar-hide">
+                    <div className="flex-1 p-8 overflow-y-auto space-y-6 scrollbar-hide">
                         {messages.map(msg => (
                             <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-rose-600 to-rose-700 text-white rounded-tr-sm' : 'bg-[#1a1a2e] text-slate-200 rounded-tl-sm border border-white/5'}`}>
+                                <div className={`max-w-[85%] p-5 rounded-2xl text-sm leading-relaxed shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-rose-600 to-rose-700 text-white rounded-tr-sm' : 'bg-[#1a1a2e] text-slate-200 rounded-tl-sm border border-white/5'}`}>
                                     {msg.text}
                                 </div>
                             </div>
                         ))}
-                        {isTyping && <div className="text-xs text-rose-400 ml-4 animate-pulse font-mono">AI IS COMPUTING...</div>}
+                        {isTyping && <div className="text-[10px] text-rose-400 ml-4 animate-pulse font-mono uppercase tracking-widest">AI IS COMPUTING...</div>}
                         <div ref={messagesEndRef} />
                     </div>
-                    <div className="p-4 bg-black/40 border-t border-white/10 backdrop-blur-md">
+                    <div className="p-5 bg-black/40 border-t border-white/5 backdrop-blur-md">
                         <div className="flex gap-3">
-                            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type your legal question..." className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors font-medium placeholder:text-slate-600" onKeyPress={(e) => e.key === 'Enter' && handleSend()} />
-                            <button onClick={handleSend} className="bg-rose-600 hover:bg-rose-700 text-white p-3 rounded-xl transition-all shadow-lg shadow-rose-600/20 hover:scale-105"><Icons.Send className="w-5 h-5" /></button>
+                            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type your legal question..." className="flex-1 bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-sm text-white focus:outline-none focus:border-rose-500/50 transition-colors font-medium placeholder:text-slate-600" onKeyPress={(e) => e.key === 'Enter' && handleSend()} />
+                            <button onClick={handleSend} className="bg-rose-600 hover:bg-rose-700 text-white p-4 rounded-xl transition-all shadow-lg shadow-rose-600/20 hover:scale-105"><Icons.Send className="w-5 h-5" /></button>
                         </div>
                     </div>
                 </div>
             );
         };
 
-        // --- ADVANCED MAP COMPONENT (Enhanced) ---
+        // --- ADVANCED MAP COMPONENT ---
         const AdvancedMap = () => {
             const [activeLayers, setActiveLayers] = useState({ heatmap: true, police: true, cctv: false, safeHavens: false });
             const [selectedZone, setSelectedZone] = useState(null);
@@ -497,101 +528,101 @@
             const toggleLayer = (layer) => setActiveLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
 
             return (
-                <div className="flex flex-col lg:flex-row gap-6 h-[600px] lg:h-[700px] animate-fade-in relative">
+                <div className="flex flex-col lg:flex-row gap-8 h-[600px] lg:h-[750px] animate-fade-in relative">
                     {/* Map Interface */}
-                    <div className="flex-1 glass-card rounded-2xl overflow-hidden relative group border border-white/10">
+                    <div className="flex-1 glass-card rounded-[2rem] overflow-hidden relative group border border-white/10">
                         {/* Radar Overlay */}
-                        <div className="absolute inset-0 pointer-events-none z-10 opacity-30">
+                        <div className="absolute inset-0 pointer-events-none z-10 opacity-20">
                              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000_100%)]"></div>
-                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-rose-500/20 rounded-full"></div>
+                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] border border-rose-500/20 rounded-full"></div>
                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-rose-500/20 rounded-full"></div>
-                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-1 bg-rose-500/30 animate-radar origin-center"></div>
+                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-0.5 bg-rose-500/30 animate-radar origin-center"></div>
                         </div>
 
                         <div className="absolute inset-0 bg-[#0f172a] opacity-90">
-                             <div className="grid grid-cols-12 grid-rows-12 h-full w-full opacity-20">
+                             <div className="grid grid-cols-12 grid-rows-12 h-full w-full opacity-10">
                                 {[...Array(144)].map((_, i) => <div key={i} className="border border-slate-700/50"></div>)}
                             </div>
                             
                             {activeLayers.heatmap && (
                                 <>
-                                    <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-green-500/20 rounded-full blur-[80px]"></div>
-                                    <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-rose-500/20 rounded-full blur-[80px] animate-pulse"></div>
-                                    <div className="absolute top-1/2 right-1/4 w-40 h-40 bg-yellow-500/10 rounded-full blur-[60px]"></div>
+                                    <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px]"></div>
+                                    <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-rose-500/10 rounded-full blur-[100px] animate-pulse"></div>
+                                    <div className="absolute top-1/2 right-1/4 w-60 h-60 bg-yellow-500/5 rounded-full blur-[80px]"></div>
                                 </>
                             )}
 
-                            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-60 z-20">
+                            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40 z-20">
                                 <path d="M100,500 C200,450 300,550 400,300 S600,100 800,200" fill="none" stroke="#3b82f6" strokeWidth="2" strokeDasharray="10,5" className="animate-[dash_20s_linear_infinite]" />
                             </svg>
 
                             {/* Enhanced Markers */}
                             <div className="absolute top-[35%] left-[28%] cursor-pointer group/marker z-30" onClick={() => setSelectedZone({ name: 'Sector 5 Park', risk: 'Low', lighting: 'Excellent', police: '2 min away', score: 92 })}>
-                                <div className="pulse-ring w-8 h-8 rounded-full bg-green-500/30 flex items-center justify-center relative border border-green-500 transition-transform group-hover/marker:scale-125">
-                                    <Icons.Shield className="w-4 h-4 text-green-400" />
+                                <div className="pulse-ring w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center relative border border-emerald-500 transition-transform group-hover/marker:scale-125 hover:bg-emerald-500/40">
+                                    <Icons.Shield className="w-4 h-4 text-emerald-400" />
                                 </div>
                             </div>
 
                              <div className="absolute bottom-[30%] right-[35%] cursor-pointer group/marker z-30" onClick={() => setSelectedZone({ name: 'Old Market Road', risk: 'High', lighting: 'Poor', police: '15 min away', score: 45 })}>
-                                <div className="pulse-ring w-8 h-8 rounded-full bg-red-500/30 flex items-center justify-center relative border border-red-500 transition-transform group-hover/marker:scale-125">
-                                    <Icons.AlertTriangle className="w-4 h-4 text-red-500" />
+                                <div className="pulse-ring w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center relative border border-rose-500 transition-transform group-hover/marker:scale-125 hover:bg-rose-500/40">
+                                    <Icons.AlertTriangle className="w-4 h-4 text-rose-500" />
                                 </div>
                             </div>
                         </div>
                         
-                         <div className="absolute top-4 left-4 flex flex-col gap-2 z-40">
-                             <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-bold text-white shadow-lg border-rose-500/50">
-                                 <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div> LIVE SURVEILLANCE
+                         <div className="absolute top-6 left-6 flex flex-col gap-2 z-40">
+                             <div className="glass-panel px-4 py-2 rounded-lg flex items-center gap-3 text-xs font-bold text-white shadow-xl border-rose-500/30">
+                                 <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> LIVE SURVEILLANCE
                              </div>
                          </div>
 
-                         <div className="absolute bottom-6 right-6 flex flex-col gap-4 z-40">
-                             <button className="bg-rose-600 hover:bg-rose-700 text-white p-4 rounded-full shadow-[0_0_20px_rgba(225,29,72,0.4)] transition-transform hover:scale-110"><Icons.Siren className="w-6 h-6" /></button>
+                         <div className="absolute bottom-8 right-8 flex flex-col gap-4 z-40">
+                             <button className="bg-rose-600 hover:bg-rose-700 text-white p-5 rounded-full shadow-[0_0_40px_rgba(225,29,72,0.4)] transition-transform hover:scale-110"><Icons.Siren className="w-7 h-7" /></button>
                          </div>
                     </div>
 
                     {/* Enhanced Command Center */}
-                    <div className="lg:w-96 glass-card rounded-2xl flex flex-col h-full border border-white/10 relative overflow-hidden">
+                    <div className="lg:w-[400px] glass-card rounded-[2rem] flex flex-col h-full border border-white/10 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none"></div>
-                        <div className="p-6 border-b border-white/10 bg-black/20">
-                            <h3 className="text-xl font-bold text-white flex items-center gap-2 tracking-wide">
-                                <Icons.Map className="w-5 h-5 text-blue-400" /> COMMAND CENTER
+                        <div className="p-8 border-b border-white/10 bg-black/20">
+                            <h3 className="text-2xl font-bold text-white flex items-center gap-3 tracking-wide">
+                                <Icons.Map className="w-6 h-6 text-blue-400" /> COMMAND CENTER
                             </h3>
-                            <p className="text-xs text-slate-400 mt-1 font-mono">DATA STREAM: ACTIVE</p>
+                            <p className="text-[10px] text-slate-400 mt-2 font-mono tracking-widest uppercase">Global Data Stream: Active</p>
                         </div>
                         
-                        <div className="p-6 flex-1 overflow-y-auto space-y-6">
+                        <div className="p-8 flex-1 overflow-y-auto space-y-8">
                             <div>
                                 <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Visual Filters</h4>
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-2 gap-4">
                                     {['heatmap', 'police', 'cctv', 'safeHavens'].map(layer => (
-                                        <button key={layer} onClick={() => toggleLayer(layer)} className={`p-3 rounded-xl border text-xs font-bold uppercase transition-all flex items-center gap-2 ${activeLayers[layer] ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'bg-white/5 border-white/5 text-slate-500 hover:bg-white/10'}`}>
-                                            <div className={`w-1.5 h-1.5 rounded-full ${activeLayers[layer] ? 'bg-blue-400 animate-pulse' : 'bg-slate-600'}`}></div> {layer}
+                                        <button key={layer} onClick={() => toggleLayer(layer)} className={`p-4 rounded-xl border text-xs font-bold uppercase transition-all flex items-center gap-3 ${activeLayers[layer] ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'bg-white/5 border-white/5 text-slate-500 hover:bg-white/10'}`}>
+                                            <div className={`w-2 h-2 rounded-full ${activeLayers[layer] ? 'bg-blue-400 animate-pulse' : 'bg-slate-600'}`}></div> {layer}
                                         </button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="glass-panel p-5 rounded-xl border border-white/5 bg-gradient-to-br from-slate-900 to-black">
-                                <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Zone Analytics</h4>
+                            <div className="glass-panel p-6 rounded-2xl border border-white/5 bg-gradient-to-br from-slate-900 to-black/80">
+                                <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-5">Zone Analytics</h4>
                                 {selectedZone ? (
-                                    <div className="space-y-4 animate-fade-in">
-                                        <div className="flex justify-between items-center border-b border-white/10 pb-2">
-                                            <span className="text-lg font-bold text-white">{selectedZone.name}</span>
+                                    <div className="space-y-5 animate-fade-in">
+                                        <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                                            <span className="text-xl font-bold text-white">{selectedZone.name}</span>
                                             <div className="flex flex-col items-end">
-                                                <span className={`text-2xl font-black ${selectedZone.score > 80 ? 'text-emerald-400' : 'text-rose-500'}`}>{selectedZone.score}</span>
-                                                <span className="text-[10px] text-slate-500">SAFETY INDEX</span>
+                                                <span className={`text-3xl font-black ${selectedZone.score > 80 ? 'text-emerald-400' : 'text-rose-500'}`}>{selectedZone.score}</span>
+                                                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Safety Index</span>
                                             </div>
                                         </div>
-                                        <div className="space-y-3 text-xs font-mono">
+                                        <div className="space-y-4 text-xs font-mono tracking-wide">
                                             <div className="flex justify-between text-slate-400"><span>RISK LEVEL</span><span className={selectedZone.risk === 'Low' ? 'text-emerald-400' : 'text-rose-400'}>{selectedZone.risk}</span></div>
                                             <div className="flex justify-between text-slate-400"><span>LIGHTING</span><span className="text-yellow-400">{selectedZone.lighting}</span></div>
                                             <div className="flex justify-between text-slate-400"><span>PATROL ETA</span><span className="text-blue-400">{selectedZone.police}</span></div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="text-center py-8 text-slate-600 text-xs font-mono">
-                                        <div className="w-12 h-12 border border-dashed border-slate-700 rounded-full mx-auto mb-3 flex items-center justify-center animate-spin-slow"><Icons.Map className="w-5 h-5" /></div>
+                                    <div className="text-center py-10 text-slate-600 text-xs font-mono tracking-wide">
+                                        <div className="w-14 h-14 border border-dashed border-slate-700 rounded-full mx-auto mb-4 flex items-center justify-center animate-spin-slow"><Icons.Map className="w-6 h-6" /></div>
                                         SELECT A ZONE FOR INTEL
                                     </div>
                                 )}
@@ -637,33 +668,33 @@
                     {showFakeCall && <FakeCallInterface onClose={() => setShowFakeCall(false)} />}
                     
                     {/* NAV BAR */}
-                    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#03030a]/80 border-b border-white/5 supports-[backdrop-filter]:bg-[#03030a]/60">
-                        <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+                    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#020205]/80 border-b border-white/5 supports-[backdrop-filter]:bg-[#020205]/60 h-24">
+                        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
                             <div className="flex items-center gap-4 cursor-pointer group" onClick={() => setView('home')}>
-                                <div className="bg-gradient-to-br from-rose-600 to-purple-800 p-3 rounded-2xl shadow-[0_0_20px_rgba(225,29,72,0.3)] group-hover:shadow-[0_0_40px_rgba(225,29,72,0.5)] transition-all">
+                                <div className="bg-gradient-to-br from-rose-600 to-purple-800 p-3.5 rounded-2xl shadow-[0_0_30px_rgba(225,29,72,0.3)] group-hover:shadow-[0_0_50px_rgba(225,29,72,0.5)] transition-all">
                                     <Icons.Shield className="w-8 h-8 text-white" />
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-2xl font-black text-white tracking-tighter uppercase">Raksha<span className="text-rose-500">.ai</span></span>
-                                    <span className="text-[10px] text-rose-500 font-mono tracking-[0.2em] uppercase">Security Mainframe</span>
+                                    <span className="text-[10px] text-rose-500 font-mono tracking-[0.3em] uppercase opacity-80">Security Mainframe</span>
                                 </div>
                             </div>
                             
-                            <div className="hidden md:flex items-center bg-white/5 rounded-full p-1 border border-white/5 backdrop-blur-md">
+                            <div className="hidden md:flex items-center bg-white/5 rounded-full p-1.5 border border-white/5 backdrop-blur-md">
                                 {navLinks.map(link => (
                                     <button 
                                         key={link.id} 
                                         onClick={() => setView(link.id)} 
-                                        className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${view === link.id ? 'text-white bg-white/10 shadow-lg' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                        className={`px-8 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${view === link.id ? 'text-white bg-white/10 shadow-lg border border-white/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
                                     >
                                         {link.label}
                                     </button>
                                 ))}
                             </div>
                             
-                            <div className="hidden md:flex items-center gap-4">
-                                <button className="glass-button w-12 h-12 rounded-full flex items-center justify-center text-rose-400 hover:text-white"><Icons.Lock className="w-5 h-5" /></button>
-                                <button className="bg-white text-black px-6 py-3 rounded-full text-sm font-black hover:bg-rose-50 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]">GET APP</button>
+                            <div className="hidden md:flex items-center gap-5">
+                                <button className="glass-button w-14 h-14 rounded-full flex items-center justify-center text-rose-400 hover:text-white transition-colors"><Icons.Lock className="w-5 h-5" /></button>
+                                <button className="bg-white text-black px-8 py-4 rounded-full text-xs font-black uppercase tracking-wider hover:bg-rose-50 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] transform hover:-translate-y-1">GET APP</button>
                             </div>
 
                             <button className="md:hidden text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -675,7 +706,7 @@
                         {mobileMenuOpen && (
                             <div className="md:hidden bg-black/95 backdrop-blur-xl border-b border-white/10 absolute top-24 left-0 w-full p-6 flex flex-col gap-4 animate-fade-in shadow-2xl z-50">
                                 {navLinks.map(link => (
-                                    <button key={link.id} onClick={() => { setView(link.id); setMobileMenuOpen(false); }} className="text-left py-4 px-6 rounded-xl bg-white/5 text-lg font-bold text-slate-200 active:bg-rose-600 active:text-white border border-white/5">
+                                    <button key={link.id} onClick={() => { setView(link.id); setMobileMenuOpen(false); }} className="text-left py-4 px-6 rounded-xl bg-white/5 text-lg font-bold text-slate-200 active:bg-rose-600 active:text-white border border-white/5 uppercase tracking-wide">
                                         {link.label}
                                     </button>
                                 ))}
@@ -683,43 +714,44 @@
                         )}
                     </nav>
 
-                    <main className="max-w-7xl mx-auto px-6 py-12 md:py-16 min-h-[calc(100vh-100px)] w-full">
+                    <main className="max-w-7xl mx-auto px-6 py-16 md:py-20 min-h-[calc(100vh-100px)] w-full">
                         
                         {/* VIEW: HOME */}
                         {view === 'home' && (
-                            <section className="flex flex-col lg:flex-row items-center justify-between gap-20 animate-fade-in">
-                                <div className="lg:w-1/2 space-y-10 z-10">
-                                    <div className="inline-flex items-center gap-3 bg-rose-500/10 backdrop-blur-xl border border-rose-500/20 text-rose-300 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(225,29,72,0.15)]">
+                            <section className="flex flex-col lg:flex-row items-center justify-between gap-24 animate-fade-in">
+                                <div className="lg:w-1/2 space-y-12 z-10">
+                                    <div className="inline-flex items-center gap-3 bg-rose-500/10 backdrop-blur-xl border border-rose-500/20 text-rose-300 px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(225,29,72,0.1)]">
                                         <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
                                         Avishakar Hackathon 2025
                                     </div>
                                     
-                                    <h1 className="text-5xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter glitch-hover cursor-default">
+                                    <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter">
                                         FEARLESS <br/> 
-                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500 animate-pulse">FUTURE.</span>
+                                        {/* NEW TEXT ANIMATION HERE */}
+                                        <span className="text-flow">FUTURE.</span>
                                     </h1>
                                     
-                                    <p className="text-lg md:text-xl text-slate-400 max-w-xl leading-relaxed font-light border-l-4 border-rose-600 pl-8">
-                                        Advanced AI-powered protection ecosystem. Shake-to-SOS, Predictive Threat Analytics, and Autonomous Drones integration.
+                                    <p className="text-xl text-slate-400 max-w-xl leading-relaxed font-light border-l-2 border-rose-600 pl-8">
+                                        The next generation of personal security. Integrating autonomous drone surveillance with predictive AI threat modeling.
                                     </p>
                                     
-                                    <div className="flex flex-wrap gap-5 pt-4">
-                                        <button onClick={() => setView('features')} className="px-10 py-5 bg-white text-black rounded-full font-black text-lg transition-all transform hover:translate-y-[-4px] shadow-[0_0_50px_rgba(255,255,255,0.3)] flex items-center gap-3 hover:bg-rose-50">
+                                    <div className="flex flex-wrap gap-6 pt-6">
+                                        <button onClick={() => setView('features')} className="px-12 py-6 bg-white text-black rounded-full font-black text-sm uppercase tracking-widest transition-all transform hover:translate-y-[-4px] shadow-[0_0_60px_rgba(255,255,255,0.3)] flex items-center gap-4 hover:bg-rose-50">
                                             ACTIVATE PROTOCOLS <Icons.ChevronRight className="w-5 h-5" />
                                         </button>
-                                        <button onClick={() => setShowFakeCall(true)} className="glass-button px-10 py-5 text-white rounded-full font-bold flex items-center gap-3 border-white/20">
+                                        <button onClick={() => setShowFakeCall(true)} className="glass-button px-12 py-6 text-white rounded-full font-bold text-sm uppercase tracking-widest flex items-center gap-4 border-white/10 hover:border-white/30">
                                             <Icons.Ghost className="w-5 h-5 text-purple-300" /> STEALTH MODE
                                         </button>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-6 pt-6">
-                                        <div className="glass-panel p-4 rounded-xl flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500"><Icons.Shield className="w-5 h-5"/></div>
-                                            <div className="flex flex-col"><span className="text-2xl font-bold text-white">24/7</span><span className="text-[10px] text-slate-400 uppercase tracking-wider">Active Monitoring</span></div>
+                                    <div className="grid grid-cols-2 gap-8 pt-8">
+                                        <div className="glass-panel p-6 rounded-2xl flex items-center gap-5 border border-white/5 hover:bg-white/5 transition-colors">
+                                            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]"><Icons.Shield className="w-6 h-6"/></div>
+                                            <div className="flex flex-col"><span className="text-3xl font-bold text-white">24/7</span><span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Active Monitoring</span></div>
                                         </div>
-                                        <div className="glass-panel p-4 rounded-xl flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500"><Icons.Siren className="w-5 h-5"/></div>
-                                            <div className="flex flex-col"><span className="text-2xl font-bold text-white">99.9%</span><span className="text-[10px] text-slate-400 uppercase tracking-wider">Uptime Reliability</span></div>
+                                        <div className="glass-panel p-6 rounded-2xl flex items-center gap-5 border border-white/5 hover:bg-white/5 transition-colors">
+                                            <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)]"><Icons.Siren className="w-6 h-6"/></div>
+                                            <div className="flex flex-col"><span className="text-3xl font-bold text-white">99.9%</span><span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Uptime Reliability</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -727,38 +759,38 @@
                                 {/* PHONE MOCKUP (Upgraded) */}
                                 <div className="lg:w-1/2 flex justify-center perspective-1000 w-full relative">
                                     {/* Background decorative elements */}
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/5 rounded-full animate-[spin_30s_linear_infinite]"></div>
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-white/10 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border border-white/5 rounded-full animate-[spin_40s_linear_infinite]"></div>
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-white/10 rounded-full animate-[spin_30s_linear_infinite_reverse]"></div>
 
-                                    <div className="relative w-[360px] max-w-full bg-[#03030a] rounded-[3.5rem] border-[10px] border-[#1a1a2e] shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden transform rotate-y-6 hover:rotate-0 transition-transform duration-700 ease-out z-20">
-                                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-7 bg-[#1a1a2e] rounded-b-2xl z-20"></div>
+                                    <div className="relative w-[380px] max-w-full bg-[#03030a] rounded-[3.5rem] border-[12px] border-[#1a1a2e] shadow-[0_0_100px_rgba(0,0,0,0.9)] overflow-hidden transform rotate-y-6 hover:rotate-0 transition-transform duration-700 ease-out z-20">
+                                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-44 h-8 bg-[#1a1a2e] rounded-b-3xl z-20"></div>
                                         
-                                        <div className="bg-gradient-to-b from-[#0f172a] via-[#020617] to-black h-[720px] p-8 flex flex-col justify-between pt-16 relative overflow-hidden">
-                                            <div className="absolute top-[-20%] right-[-20%] w-80 h-80 bg-rose-600/30 rounded-full blur-[100px] animate-pulse"></div>
+                                        <div className="bg-gradient-to-b from-[#0f172a] via-[#020617] to-black h-[760px] p-8 flex flex-col justify-between pt-20 relative overflow-hidden">
+                                            <div className="absolute top-[-20%] right-[-20%] w-96 h-96 bg-rose-600/20 rounded-full blur-[120px] animate-pulse"></div>
 
                                             <div className="flex justify-between items-center text-white mb-8 relative z-10">
                                                 <div>
-                                                    <h3 className="font-bold text-xl tracking-tight">Hi, Aarohi</h3>
-                                                    <div className="flex items-center gap-2 mt-1">
+                                                    <h3 className="font-bold text-2xl tracking-tight">Hi, Aarohi</h3>
+                                                    <div className="flex items-center gap-2 mt-2">
                                                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                        <p className="text-xs text-emerald-400 font-mono tracking-wider">SECURE CONNECTION</p>
+                                                        <p className="text-[10px] text-emerald-400 font-mono tracking-widest uppercase">Secure Connection</p>
                                                     </div>
                                                 </div>
-                                                <div className="w-12 h-12 bg-gradient-to-tr from-rose-500 to-purple-600 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border border-white/10">A</div>
+                                                <div className="w-14 h-14 bg-gradient-to-tr from-rose-500 to-purple-600 rounded-full flex items-center justify-center font-bold text-2xl shadow-lg border border-white/10">A</div>
                                             </div>
                                             
                                             <div className="flex-1 flex flex-col justify-center items-center">
                                                 <SOSButton />
                                             </div>
                                             
-                                            <div className="grid grid-cols-2 gap-4 mt-8 relative z-10">
-                                                <button onClick={() => setView('community')} className="glass-panel p-4 rounded-2xl flex flex-col items-center gap-3 text-slate-300 hover:bg-white/10 hover:text-white transition-colors group">
-                                                    <div className="p-2 bg-emerald-500/10 rounded-full group-hover:bg-emerald-500/20"><Icons.Map className="w-6 h-6 text-emerald-400" /></div>
-                                                    <span className="text-xs font-bold uppercase tracking-wider">Live Map</span>
+                                            <div className="grid grid-cols-2 gap-5 mt-10 relative z-10">
+                                                <button onClick={() => setView('community')} className="glass-panel p-5 rounded-3xl flex flex-col items-center gap-3 text-slate-300 hover:bg-white/10 hover:text-white transition-colors group border border-white/5">
+                                                    <div className="p-3 bg-emerald-500/10 rounded-full group-hover:bg-emerald-500/20"><Icons.Map className="w-6 h-6 text-emerald-400" /></div>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">Live Map</span>
                                                 </button>
-                                                <button onClick={() => setView('features')} className="glass-panel p-4 rounded-2xl flex flex-col items-center gap-3 text-slate-300 hover:bg-white/10 hover:text-white transition-colors group">
-                                                    <div className="p-2 bg-pink-500/10 rounded-full group-hover:bg-pink-500/20"><Icons.Users className="w-6 h-6 text-pink-400" /></div>
-                                                    <span className="text-xs font-bold uppercase tracking-wider">Guardians</span>
+                                                <button onClick={() => setView('features')} className="glass-panel p-5 rounded-3xl flex flex-col items-center gap-3 text-slate-300 hover:bg-white/10 hover:text-white transition-colors group border border-white/5">
+                                                    <div className="p-3 bg-pink-500/10 rounded-full group-hover:bg-pink-500/20"><Icons.Users className="w-6 h-6 text-pink-400" /></div>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">Guardians</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -771,8 +803,8 @@
                         {view === 'features' && (
                             <div className="animate-fade-in">
                                 <div className="text-center max-w-3xl mx-auto mb-20">
-                                    <h2 className="text-5xl md:text-6xl font-black text-white mb-6 uppercase tracking-tight">Tactical Modules</h2>
-                                    <p className="text-slate-400 text-xl font-light">Comprehensive defense suite designed for every scenario.</p>
+                                    <h2 className="text-5xl md:text-7xl font-black text-white mb-8 uppercase tracking-tight">Tactical Modules</h2>
+                                    <p className="text-slate-400 text-xl font-light leading-relaxed">Advanced defense suite designed for every scenario. Powered by neural networks.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {FEATURES.map(f => <FeatureCard key={f.id} feature={f} />)}
@@ -784,8 +816,8 @@
                          {view === 'community' && (
                             <div className="max-w-7xl mx-auto animate-fade-in pt-6">
                                 <div className="text-center mb-16">
-                                    <h2 className="text-5xl md:text-6xl font-black text-white mb-4 uppercase tracking-tight">Global Intel Map</h2>
-                                    <p className="text-slate-400 text-lg">Real-time data aggregation for predictive risk modeling.</p>
+                                    <h2 className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tight">Global Intel Map</h2>
+                                    <p className="text-slate-400 text-lg">Real-time crowdsourced data aggregation for predictive risk modeling.</p>
                                 </div>
                                 <AdvancedMap />
                             </div>
@@ -795,39 +827,39 @@
                         {view === 'legal' && (
                             <div className="max-w-6xl mx-auto animate-fade-in pt-6">
                                 <div className="text-center mb-16">
-                                    <h2 className="text-5xl md:text-6xl font-black text-white mb-4 uppercase tracking-tight">Legal & Enforcement</h2>
-                                    <p className="text-slate-400 text-lg">Direct line to authorities and AI-powered rights assistance.</p>
+                                    <h2 className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tight">Legal & Enforcement</h2>
+                                    <p className="text-slate-400 text-lg">Direct encrypted line to authorities and AI-powered rights assistance.</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                                     <div className="space-y-8">
-                                        <div className="glass-card p-10 rounded-[2rem] border-l-4 border-rose-500 relative overflow-hidden group hover:bg-white/5 transition-colors">
-                                            <div className="absolute top-0 right-0 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl group-hover:bg-rose-500/20 transition-colors"></div>
+                                        <div className="glass-card p-10 rounded-[2.5rem] border-l-4 border-rose-500 relative overflow-hidden group hover:bg-white/5 transition-colors">
+                                            <div className="absolute top-0 right-0 w-60 h-60 bg-rose-500/10 rounded-full blur-[80px] group-hover:bg-rose-500/20 transition-colors"></div>
                                             <div className="relative z-10">
-                                                <div className="flex justify-between items-start mb-6">
+                                                <div className="flex justify-between items-start mb-8">
                                                     <div>
-                                                        <h3 className="text-3xl font-bold text-white">Emergency Dispatch</h3>
-                                                        <p className="text-slate-400 text-sm mt-2 font-mono">PRIORITY LINE: 112</p>
+                                                        <h3 className="text-4xl font-bold text-white tracking-tight">Emergency Dispatch</h3>
+                                                        <p className="text-slate-400 text-sm mt-3 font-mono tracking-widest uppercase">Priority Line: 112</p>
                                                     </div>
-                                                    <div className="p-3 bg-rose-500/20 rounded-xl"><Icons.Siren className="w-10 h-10 text-rose-500" /></div>
+                                                    <div className="p-4 bg-rose-500/20 rounded-2xl"><Icons.Siren className="w-10 h-10 text-rose-500" /></div>
                                                 </div>
-                                                <button className="w-full bg-gradient-to-r from-rose-600 to-rose-800 hover:from-rose-500 hover:to-rose-700 text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_30px_rgba(225,29,72,0.3)] flex items-center justify-center gap-4 transition-all hover:scale-[1.02]">
+                                                <button className="w-full bg-gradient-to-r from-rose-600 to-rose-800 hover:from-rose-500 hover:to-rose-700 text-white py-6 rounded-2xl font-black text-xl shadow-[0_0_40px_rgba(225,29,72,0.4)] flex items-center justify-center gap-4 transition-all hover:scale-[1.02]">
                                                     <Icons.Phone className="w-6 h-6 animate-pulse" /> INITIATE CALL
                                                 </button>
                                             </div>
                                         </div>
 
-                                        <div className="glass-card p-10 rounded-[2rem] border-l-4 border-purple-500 relative overflow-hidden group hover:bg-white/5 transition-colors">
-                                             <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-colors"></div>
+                                        <div className="glass-card p-10 rounded-[2.5rem] border-l-4 border-purple-500 relative overflow-hidden group hover:bg-white/5 transition-colors">
+                                             <div className="absolute top-0 right-0 w-60 h-60 bg-purple-500/10 rounded-full blur-[80px] group-hover:bg-purple-500/20 transition-colors"></div>
                                             <div className="relative z-10">
-                                                <div className="flex justify-between items-start mb-6">
+                                                <div className="flex justify-between items-start mb-8">
                                                     <div>
-                                                        <h3 className="text-3xl font-bold text-white">Support Network</h3>
-                                                        <p className="text-slate-400 text-sm mt-2 font-mono">HELPLINE: 1091</p>
+                                                        <h3 className="text-4xl font-bold text-white tracking-tight">Support Network</h3>
+                                                        <p className="text-slate-400 text-sm mt-3 font-mono tracking-widest uppercase">Helpline: 1091</p>
                                                     </div>
-                                                     <div className="p-3 bg-purple-500/20 rounded-xl"><Icons.Heart className="w-10 h-10 text-purple-500" /></div>
+                                                     <div className="p-4 bg-purple-500/20 rounded-2xl"><Icons.Heart className="w-10 h-10 text-purple-500" /></div>
                                                 </div>
-                                                <button className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_30px_rgba(147,51,234,0.3)] flex items-center justify-center gap-4 transition-all hover:scale-[1.02]">
+                                                <button className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 text-white py-6 rounded-2xl font-black text-xl shadow-[0_0_40px_rgba(147,51,234,0.4)] flex items-center justify-center gap-4 transition-all hover:scale-[1.02]">
                                                     <Icons.Phone className="w-6 h-6" /> CONTACT SUPPORT
                                                 </button>
                                             </div>
