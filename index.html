@@ -476,7 +476,7 @@
 
             return (
                 <div 
-                    className={`${isVisible ? "page-transition-enter-active" : "page-transition-exit-active"} ${className}`}
+                    className={`absolute w-full ${isVisible ? "page-transition-enter-active" : "page-transition-exit-active"} ${className}`}
                     onAnimationEnd={onAnimationEnd}
                 >
                     {children}
@@ -845,11 +845,38 @@
             useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
             const handleSend = async () => {
-                if (!input.trim() || !userId) return;
-                const text = input;
-                setInput('');
-                await supabase.from('messages').insert({ user_id: userId, content: text });
-            };
+    if (!input.trim() || !userId) return;
+    
+    
+    const { error } = await supabase
+        .from('messages')
+        .insert([
+            { user_id: userId, content: input.trim() },
+        ]);
+
+    if (error) {
+        console.error('Error sending message:', error);
+    } else {
+        
+        setInput(''); 
+
+        
+        const botReply = `RAKSHA AI: Your query has been logged and is under secure analysis. Estimated resolution time: ${Math.floor(Math.random() * 10) + 5} seconds.`;
+
+        
+        setTimeout(async () => {
+            const { error: botError } = await supabase
+                .from('messages')
+                .insert([
+                    { user_id: 'raksha-ai-bot', content: botReply }, 
+                ]);
+            
+            if (botError) {
+                console.error('Error sending bot response:', botError);
+            }
+        }, 1500); 
+    }
+};
 
             return (
                 <div className="glass-card rounded-[2.5rem] overflow-hidden flex flex-col h-[700px] border border-white/10 shadow-2xl relative">
@@ -1133,7 +1160,7 @@
                     </nav>
 
                     {/* MAIN CONTENT AREA */}
-                    <main className="max-w-[1400px] mx-auto px-8 py-20 md:py-24 min-h-[calc(100vh-100px)] w-full">
+                    <main className="max-w-[1400px] mx-auto px-8 py-20 md:py-24 min-h-[calc(100vh-100px)] relative">
                         
                         <TransitionWrapper isVisible={view === 'home'}>
                             <section className="flex flex-col lg:flex-row items-center justify-between gap-32">
