@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raksha.ai - Hyper-Advanced Safety Portal v5.1</title>
+    <title>Raksha.ai - Hyper-Advanced Safety Portal v5.2</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -12,7 +12,6 @@
     
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -87,17 +86,18 @@
         }
 
         /* --- FLUID TRANSITIONS --- */
-        .page-transition-enter { opacity: 0; transform: translateY(20px) scale(0.98); filter: blur(10px); }
+        /* Fixed: Adjusted transforms to be subtle to avoid layout popping */
+        .page-transition-enter { opacity: 0; transform: scale(0.98); filter: blur(10px); }
         .page-transition-enter-active { 
             opacity: 1; 
-            transform: translateY(0) scale(1); 
+            transform: scale(1); 
             filter: blur(0);
             transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 500ms ease; 
         }
-        .page-transition-exit { opacity: 1; transform: translateY(0); filter: blur(0); }
+        .page-transition-exit { opacity: 1; transform: scale(1); filter: blur(0); }
         .page-transition-exit-active { 
             opacity: 0; 
-            transform: translateY(-20px) scale(0.98); 
+            transform: scale(1.02); 
             filter: blur(10px);
             transition: opacity 300ms ease, transform 300ms ease, filter 300ms ease; 
         }
@@ -224,7 +224,6 @@
 </head>
 <body class="selection:bg-cyan-500/30 selection:text-white">
     
-    <!-- DYNAMIC BACKGROUND SYSTEM -->
     <div class="aurora-bg"></div>
     <div class="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none z-0 mix-blend-overlay"></div>
     <div class="scanline"></div>
@@ -247,11 +246,9 @@
         // HELPER FUNCTIONS
         // ====================================================================
         
-        // Extract Name from Email (e.g. amrita@gmail.com -> Amrita)
         const extractName = (email) => {
             if (!email) return "User";
             const namePart = email.split('@')[0];
-            // Remove numbers if any, capitalize first letter
             const cleanName = namePart.replace(/[0-9]/g, '');
             return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
         };
@@ -326,10 +323,9 @@
         }
 
         // ====================================================================
-        // VISUAL COMPONENTS (Backgrounds, Icons)
+        // VISUAL COMPONENTS
         // ====================================================================
 
-        // --- PARTICLE MOUSE TRAIL ---
         const MouseTrail = () => {
             const canvasRef = useRef(null);
             
@@ -401,7 +397,6 @@
             return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[1]" />;
         };
 
-        // --- STARFIELD COMPONENT ---
         const Starfield = () => {
             const containerRef = useRef(null);
 
@@ -425,7 +420,6 @@
             return <div ref={containerRef} className="starfield" />;
         };
 
-        // --- ICONS ---
         const Icons = {
             Shield: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
             Siren: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/><path d="M21 12h1"/><path d="M18.5 4.5 20 3"/><path d="M2 12h1"/><path d="M4 3 5.5 4.5"/></svg>,
@@ -460,7 +454,8 @@
             Loading: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v2M2 12h2M21 12h-2M4.5 2v2M12 21v-2M12 4v2M19.5 2v2M4.5 20v2M19.5 20v2"/><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
         };
 
-        // --- TRANSITION WRAPPER ---
+        // --- TRANSITION WRAPPER (FIXED FOR SCROLLING) ---
+        // We added logic here to ensure exiting pages don't block clicks and overlay correctly
         const TransitionWrapper = ({ children, isVisible, className="" }) => {
             const [render, setRender] = useState(isVisible);
             
@@ -476,7 +471,7 @@
 
             return (
                 <div 
-                    className={`${isVisible ? "page-transition-enter-active" : "page-transition-exit-active"} ${className}`}
+                    className={`${isVisible ? "page-transition-enter-active" : "page-transition-exit-active pointer-events-none"} ${className} col-start-1 row-start-1 w-full self-start`}
                     onAnimationEnd={onAnimationEnd}
                 >
                     {children}
@@ -540,7 +535,7 @@
             );
         };
 
-        // --- AUTH SCREEN (NEW) ---
+        // --- AUTH SCREEN ---
         const AuthScreen = ({ signIn, signUp, loading, error }) => {
             const [email, setEmail] = useState('');
             const [password, setPassword] = useState('');
@@ -741,15 +736,12 @@
         const FakeCallInterface = ({ onClose }) => {
             const [status, setStatus] = useState('incoming');
 
-            // --- FEATURE: STEALTH MODE VOICE ---
             useEffect(() => {
                 if (status === 'connected') {
-                    // Try to use speech synthesis for Mom voice
                     const msg = new SpeechSynthesisUtterance("Hello? Beta, where are you? Are you safe? I am waiting for you.");
                     msg.rate = 1; 
-                    msg.pitch = 1.1; // Slightly higher pitch for female voice simulation
+                    msg.pitch = 1.1; 
                     
-                    // Attempt to find a female voice
                     const voices = window.speechSynthesis.getVoices();
                     const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google US English') || v.lang === 'en-US');
                     if (femaleVoice) msg.voice = femaleVoice;
@@ -808,14 +800,13 @@
             );
         };
 
-        // --- CHAT INTERFACE (CONNECTED TO SUPABASE) ---
+        // --- CHAT INTERFACE ---
         const ChatInterface = ({ userId }) => {
             const [messages, setMessages] = useState([]);
             const [input, setInput] = useState('');
             const [loading, setLoading] = useState(true);
             const messagesEndRef = useRef(null);
 
-            // Fetch initial messages
             useEffect(() => {
                 if (!userId) return;
                 const fetchMessages = async () => {
@@ -829,7 +820,6 @@
                 };
                 fetchMessages();
 
-                // Realtime subscription
                 const subscription = supabase
                     .channel('messages_channel')
                     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
@@ -898,7 +888,6 @@
 
             const toggleLayer = (layer) => setActiveLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
 
-            // --- FEATURE: LIVE SATELLITE FEED (Embedded Google Maps) ---
             const toggleSatellite = () => {
                 if (showSatellite) {
                     setShowSatellite(false);
@@ -912,7 +901,6 @@
                         setShowSatellite(true);
                     }, (error) => {
                         console.error("Location error", error);
-                        // Fallback coords if location denied
                         setShowSatellite(true);
                     });
                 } else {
@@ -939,7 +927,6 @@
                                     className="w-full h-full"
                                  ></iframe>
                                  
-                                 {/* Overlay Gradients to blend with UI */}
                                  <div className="absolute inset-0 bg-gradient-to-b from-[#030014]/80 via-transparent to-[#030014]/80 pointer-events-none"></div>
                             </div>
                         ) : (
@@ -1054,10 +1041,8 @@
                 window.scrollTo({ top: 0, behavior: 'auto' });
             }, [view]);
 
-            // Handle Boot Sequence
             if (!booted) return <BootSequence onComplete={() => setBooted(true)} />;
 
-            // Handle Auth State
             if (!user) {
                 return <AuthScreen signIn={signIn} signUp={signUp} loading={loading} error={error} />;
             }
@@ -1132,8 +1117,8 @@
                         )}
                     </nav>
 
-                    {/* MAIN CONTENT AREA */}
-                    <main className="max-w-[1400px] mx-auto px-8 py-20 md:py-24 min-h-[calc(100vh-100px)] w-full">
+                    {/* MAIN CONTENT AREA (FIXED: Grid Layout for Stacking) */}
+                    <main className="max-w-[1400px] mx-auto px-8 py-20 md:py-24 min-h-[calc(100vh-100px)] w-full grid grid-cols-1 items-start relative">
                         
                         <TransitionWrapper isVisible={view === 'home'}>
                             <section className="flex flex-col lg:flex-row items-center justify-between gap-32">
