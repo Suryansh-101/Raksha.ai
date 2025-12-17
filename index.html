@@ -1106,60 +1106,62 @@
                             </TransitionWrapper>
 
                             <TransitionWrapper isVisible={view === 'legal'}>
-                                <div className="max-w-7xl mx-auto px-6 py-10 w-full min-h-[85vh] grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                    
-                                    {/* Quick Actions Panel - NOW EQUAL HEIGHT */}
-                                    <div className="glass-card rounded-[2.5rem] lg:col-span-1 p-8 h-[700px] border border-white/10 shadow-2xl relative flex flex-col justify-between">
-                                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
+                                <div className="max-w-7xl mx-auto px-6 w-full min-h-[calc(100vh-140px)] flex items-center justify-center">
+                                    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
                                         
-                                        <div className="relative z-10">
-                                            <h2 className="text-4xl font-bold text-white mb-2">Legal Command</h2>
-                                            <p className="text-slate-400 text-sm">Direct encrypted line to enforcement agencies.</p>
-                                        </div>
+                                        {/* Quick Actions Panel - CENTERED & MATCHING HEIGHT */}
+                                        <div className="glass-card rounded-[2.5rem] lg:col-span-1 p-8 h-[700px] border border-white/10 shadow-2xl relative flex flex-col justify-between">
+                                            <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
+                                            
+                                            <div className="relative z-10">
+                                                <h2 className="text-4xl font-bold text-white mb-2">Legal Command</h2>
+                                                <p className="text-slate-400 text-sm">Direct encrypted line to enforcement agencies.</p>
+                                            </div>
 
-                                        <div className="grid gap-6 relative z-10 flex-1 content-center">
-                                            <button className="glass-panel p-6 rounded-2xl flex items-center justify-between group hover:border-rose-500/50 transition-all text-left">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-14 h-14 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all"><Icons.Shield className="w-7 h-7"/></div>
-                                                    <div>
-                                                        <h3 className="text-lg font-bold text-white">Police Dispatch</h3>
-                                                        <p className="text-xs text-rose-400 font-mono font-bold tracking-widest mt-1">PRIORITY LINE: 100</p>
+                                            <div className="grid gap-6 relative z-10 flex-1 content-center">
+                                                <button className="glass-panel p-6 rounded-2xl flex items-center justify-between group hover:border-rose-500/50 transition-all text-left">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-14 h-14 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all"><Icons.Shield className="w-7 h-7"/></div>
+                                                        <div>
+                                                            <h3 className="text-lg font-bold text-white">Police Dispatch</h3>
+                                                            <p className="text-xs text-rose-400 font-mono font-bold tracking-widest mt-1">PRIORITY LINE: 100</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </button>
+                                                </button>
 
-                                            <button className="glass-panel p-6 rounded-2xl flex items-center justify-between group hover:border-purple-500/50 transition-all text-left">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-14 h-14 bg-purple-500/10 border border-purple-500/30 rounded-xl flex items-center justify-center text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-all"><Icons.Bot className="w-7 h-7"/></div>
-                                                    <div>
-                                                        <h3 className="text-lg font-bold text-white">Women's Cell</h3>
-                                                        <p className="text-xs text-purple-400 font-mono font-bold tracking-widest mt-1">HELPLINE: 1091</p>
+                                                <button className="glass-panel p-6 rounded-2xl flex items-center justify-between group hover:border-purple-500/50 transition-all text-left">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-14 h-14 bg-purple-500/10 border border-purple-500/30 rounded-xl flex items-center justify-center text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-all"><Icons.Bot className="w-7 h-7"/></div>
+                                                        <div>
+                                                            <h3 className="text-lg font-bold text-white">Women's Cell</h3>
+                                                            <p className="text-xs text-purple-400 font-mono font-bold tracking-widest mt-1">HELPLINE: 1091</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </button>
-                                        </div>
+                                                </button>
+                                            </div>
 
-                                        <div className="glass-panel p-6 rounded-2xl border-t-4 border-rose-500 relative z-10 bg-gradient-to-b from-rose-900/10 to-transparent">
-                                            <h4 className="font-bold text-white mb-3 flex items-center gap-2"><Icons.Layers className="w-4 h-4 text-rose-400"/> Rights Database</h4>
-                                            <div className="space-y-3">
-                                                <div className="flex items-start gap-3 text-sm text-slate-300 p-2 hover:bg-white/5 rounded transition-colors cursor-pointer">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5"></div>
-                                                    <span>Right to Zero FIR (Any Station)</span>
-                                                </div>
-                                                <div className="flex items-start gap-3 text-sm text-slate-300 p-2 hover:bg-white/5 rounded transition-colors cursor-pointer">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5"></div>
-                                                    <span>No Arrests After Sunset (Women)</span>
-                                                </div>
-                                                <div className="flex items-start gap-3 text-sm text-slate-300 p-2 hover:bg-white/5 rounded transition-colors cursor-pointer">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5"></div>
-                                                    <span>Right to Free Legal Aid</span>
+                                            <div className="glass-panel p-6 rounded-2xl border-t-4 border-rose-500 relative z-10 bg-gradient-to-b from-rose-900/10 to-transparent">
+                                                <h4 className="font-bold text-white mb-3 flex items-center gap-2"><Icons.Layers className="w-4 h-4 text-rose-400"/> Rights Database</h4>
+                                                <div className="space-y-3">
+                                                    <div className="flex items-start gap-3 text-sm text-slate-300 p-2 hover:bg-white/5 rounded transition-colors cursor-pointer">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5"></div>
+                                                        <span>Right to Zero FIR (Any Station)</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-3 text-sm text-slate-300 p-2 hover:bg-white/5 rounded transition-colors cursor-pointer">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5"></div>
+                                                        <span>No Arrests After Sunset (Women)</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-3 text-sm text-slate-300 p-2 hover:bg-white/5 rounded transition-colors cursor-pointer">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5"></div>
+                                                        <span>Right to Free Legal Aid</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* AI Chat Interface */}
-                                    <ChatInterface userId={user.id} />
+                                        {/* AI Chat Interface - CENTERED & MATCHING HEIGHT */}
+                                        <ChatInterface userId={user.id} />
+                                    </div>
                                 </div>
                             </TransitionWrapper>
                         </main>
