@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Raksha.ai - Hyper-Advanced Safety Portal v8.0</title>
     
+    <!-- Phase 4: Embedded Manifest for PWA (Data URI strategy for single-file compliance) -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Raksha SafeSpace","short_name":"Raksha","start_url":".","display":"standalone","background_color":"#02000f","theme_color":"#f43f5e","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2555/2555572.png","sizes":"192x192","type":"image/png"}]}'>
+    <meta name="theme-color" content="#f43f5e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
@@ -175,6 +181,19 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
 
+        /* Phase 3: Strobe Effect CSS */
+        @keyframes strobe-flash {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(255, 0, 0, 0.5); }
+        }
+        .strobe-active {
+            animation: strobe-flash 0.1s infinite;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            pointer-events: none;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #02000f; }
@@ -268,13 +287,12 @@
             return { session, user, loading, error, signIn, signUp, signOut };
         }
 
-        // --- BACKGROUND COMPONENT (Updated Colors) ---
+        // --- BACKGROUND COMPONENT ---
         const CyberBackground = memo(() => (
             <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-[#02000f]">
                 {/* Gradient Orbs - Shifted to Rose/Purple spectrum */}
                 <div className="absolute top-[-10%] right-[-10%] w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-rose-600/10 rounded-full blur-[100px] animate-breath"></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-purple-600/10 rounded-full blur-[100px] animate-breath" style={{animationDelay: '2s'}}></div>
-                {/* The third orb was Cyan, now it's Indigo/Fuchsia to bridge the gap */}
                 <div className="absolute top-[40%] left-[30%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-fuchsia-600/5 rounded-full blur-[80px] animate-breath" style={{animationDelay: '4s'}}></div>
                 
                 {/* Cyber Grid */}
@@ -284,7 +302,7 @@
             </div>
         ));
 
-        // --- ICONS (Same) ---
+        // --- ICONS ---
         const Icons = {
             Shield: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
             Siren: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/><path d="M21 12h1"/><path d="M18.5 4.5 20 3"/><path d="M2 12h1"/><path d="M4 3 5.5 4.5"/></svg>,
@@ -317,6 +335,8 @@
             Award: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>,
             BookOpen: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
             HelpCircle: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>,
+            Volume2: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>,
+            VolumeX: (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" x2="17" y1="9" y2="15"/><line x1="17" x2="23" y1="9" y2="15"/></svg>,
         };
 
         const TransitionWrapper = ({ children, isVisible, className="" }) => {
@@ -332,6 +352,38 @@
         };
 
         // --- COMPONENTS ---
+
+        // Phase 1: Ghost Protocol Component
+        const GhostProtocol = () => {
+            const handleQuickExit = useCallback(() => {
+                // 1. Stop all processes
+                window.stop();
+                // 2. Change Title
+                document.title = "Google Search";
+                // 3. Replace History & Navigate
+                window.location.replace("https://www.google.com");
+            }, []);
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === "Escape") {
+                        handleQuickExit();
+                    }
+                };
+                window.addEventListener("keydown", handleKeyDown);
+                return () => window.removeEventListener("keydown", handleKeyDown);
+            }, [handleQuickExit]);
+
+            return (
+                <button 
+                    onClick={handleQuickExit} 
+                    className="fixed top-4 right-4 z-[100] bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full shadow-lg border border-red-400 transition-all active:scale-95 text-xs tracking-wider uppercase animate-pulse hover:animate-none"
+                    title="Quick Exit (ESC)"
+                >
+                    Quick Exit
+                </button>
+            );
+        };
 
         const BootSequence = ({ onComplete }) => {
             const [logs, setLogs] = useState([]);
@@ -580,18 +632,101 @@
 
         // --- FEATURE COMPONENTS ---
         
-        const SOSButton = ({ userId }) => {
+        // Phase 2: Enhanced SOS Button with Geolocation & WhatsApp
+        const SOSButton = ({ userId, onSirenToggle, isSirenActive }) => {
             const [active, setActive] = useState(false);
             const [countdown, setCountdown] = useState(3);
-            const handleSOS = async () => { if (active) { setActive(false); setCountdown(3); return; } setActive(true); let timer = setInterval(() => { setCountdown((prev) => { if (prev <= 1) { clearInterval(timer); return 0; } return prev - 1; }); }, 1000); console.log("SOS Triggered by", userId); };
+            const [status, setStatus] = useState('');
+
+            const handleSOS = async () => { 
+                if (active) { 
+                    setActive(false); 
+                    setCountdown(3); 
+                    setStatus('');
+                    return; 
+                } 
+                
+                setActive(true); 
+                setStatus('INITIATING...');
+
+                let timer = setInterval(() => { 
+                    setCountdown((prev) => { 
+                        if (prev <= 1) { 
+                            clearInterval(timer); 
+                            sendDistressSignal();
+                            return 0; 
+                        } 
+                        return prev - 1; 
+                    }); 
+                }, 1000); 
+            };
+
+            const sendDistressSignal = () => {
+                setStatus('LOCATING...');
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            const mapLink = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+                            const message = `Emergency! I need help. Track me here: ${mapLink}`;
+                            const encodedMsg = encodeURIComponent(message);
+                            
+                            setStatus('SENT');
+                            
+                            // Check if mobile
+                            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                            
+                            if (isMobile) {
+                                window.open(`https://wa.me/?text=${encodedMsg}`, '_blank');
+                            } else {
+                                alert(`DISTRESS MESSAGE GENERATED:\n\n${message}\n\n(Copy this manually as WhatsApp Web is not detected)`);
+                            }
+                            
+                            // Reset after delay
+                            setTimeout(() => { setActive(false); setCountdown(3); setStatus(''); }, 5000);
+                        },
+                        (error) => {
+                            console.error("Geo Error", error);
+                            setStatus('GPS FAILED');
+                            alert("Geolocation failed. Please manually share your location.");
+                            setActive(false);
+                            setCountdown(3);
+                        },
+                        { enableHighAccuracy: true, timeout: 10000 }
+                    );
+                } else {
+                    alert("Geolocation not supported.");
+                    setActive(false);
+                }
+            };
+
             return (
                 <div className="flex flex-col items-center justify-center py-6 relative">
                     {active && <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"><div className="w-60 h-60 border border-rose-500/30 rounded-full animate-ping-slow"></div><div className="w-80 h-80 border border-rose-500/10 rounded-full animate-ping-slow" style={{animationDelay: '0.5s'}}></div></div>}
+                    
                     <button onClick={handleSOS} className={`relative z-10 w-44 h-44 md:w-52 md:h-52 rounded-full flex items-center justify-center transition-all duration-500 ${active ? 'bg-rose-600 scale-110 shadow-[0_0_120px_rgba(225,29,72,0.6)]' : 'bg-gradient-to-br from-rose-600 to-rose-900 hover:scale-105 hover:shadow-[0_0_80px_rgba(225,29,72,0.4)]'} group overflow-hidden border-4 border-white/5`}>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div><div className="absolute inset-0 rounded-full border-4 border-white/10 animate-[spin_10s_linear_infinite] border-t-white/40"></div><div className="absolute inset-4 rounded-full border border-white/20"></div>
-                        <div className="flex flex-col items-center text-white z-20"><Icons.Siren className={`w-14 h-14 mb-2 transition-transform ${active ? 'animate-bounce' : 'group-hover:rotate-12'}`} /><span className="text-3xl font-black tracking-[0.2em] font-mono">SOS</span>{active && <span className="text-[10px] font-bold mt-2 bg-black/60 px-4 py-1 rounded-full backdrop-blur-md border border-red-400/50 font-mono tracking-widest uppercase animate-pulse">{countdown > 0 ? `SENDING ${countdown}s` : 'TRANSMITTING'}</span>}</div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                        <div className="absolute inset-0 rounded-full border-4 border-white/10 animate-[spin_10s_linear_infinite] border-t-white/40"></div>
+                        <div className="absolute inset-4 rounded-full border border-white/20"></div>
+                        <div className="flex flex-col items-center text-white z-20">
+                            <Icons.Siren className={`w-14 h-14 mb-2 transition-transform ${active ? 'animate-bounce' : 'group-hover:rotate-12'}`} />
+                            <span className="text-3xl font-black tracking-[0.2em] font-mono">SOS</span>
+                            {active && <span className="text-[10px] font-bold mt-2 bg-black/60 px-4 py-1 rounded-full backdrop-blur-md border border-red-400/50 font-mono tracking-widest uppercase animate-pulse">{countdown > 0 ? `SENDING ${countdown}s` : status}</span>}
+                        </div>
                     </button>
-                    <p className="mt-12 text-slate-500 text-center max-w-[200px] text-[10px] font-bold opacity-60 tracking-[0.2em] uppercase">Press & Hold for Emergency</p>
+                    
+                    {/* Phase 3: Auditory Shield Control Panel */}
+                    <div className="mt-8 flex gap-4">
+                        <button 
+                            onClick={onSirenToggle}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold text-xs uppercase tracking-widest transition-all ${isSirenActive ? 'bg-white text-rose-600 shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-pulse' : 'glass-button text-white hover:bg-rose-500/20'}`}
+                        >
+                            {isSirenActive ? <Icons.VolumeX className="w-4 h-4"/> : <Icons.Volume2 className="w-4 h-4"/>}
+                            {isSirenActive ? 'STOP SIREN' : 'SIREN'}
+                        </button>
+                    </div>
+                    
+                    <p className="mt-4 text-slate-500 text-center max-w-[200px] text-[10px] font-bold opacity-60 tracking-[0.2em] uppercase">Press & Hold for Emergency</p>
                 </div>
             );
         };
@@ -610,17 +745,48 @@
                 return () => window.speechSynthesis.cancel(); 
             }, [status]);
             return (
-                <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-between py-12 text-white animate-fade-in">
+                <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-between py-12 text-white animate-fade-in backdrop-blur-xl bg-black/90">
                     {status === 'incoming' ? (
                         <>
-                            <div className="flex flex-col items-center mt-20 animate-float"><div className="w-32 h-32 bg-gradient-to-b from-slate-200 to-slate-400 rounded-full flex items-center justify-center mb-8 shadow-2xl overflow-hidden ring-4 ring-white/10"><Icons.Users className="w-16 h-16 text-slate-600" /></div><h2 className="text-5xl font-light tracking-tight mb-2">Mom</h2><p className="text-xl opacity-60">Mobile</p></div>
-                            <div className="w-full px-12 mb-20 flex justify-between items-center max-w-md"><button onClick={onClose} className="flex flex-col items-center gap-4 group"><div className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-[0_0_40px_rgba(244,63,94,0.4)]"><Icons.PhoneOff className="w-8 h-8 fill-current" /></div><span className="text-sm font-medium opacity-80">Decline</span></button><button onClick={() => setStatus('connected')} className="flex flex-col items-center gap-4 group"><div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-[0_0_40px_rgba(16,185,129,0.4)] animate-bounce"><Icons.Phone className="w-8 h-8 fill-current" /></div><span className="text-sm font-medium opacity-80">Accept</span></button></div>
+                            <div className="flex flex-col items-center mt-20 animate-float">
+                                <div className="w-32 h-32 bg-gradient-to-b from-slate-200 to-slate-400 rounded-full flex items-center justify-center mb-8 shadow-2xl overflow-hidden ring-4 ring-white/10">
+                                    <Icons.Users className="w-16 h-16 text-slate-600" />
+                                </div>
+                                <h2 className="text-5xl font-light tracking-tight mb-2">Mom</h2>
+                                <p className="text-xl opacity-60">Mobile</p>
+                            </div>
+                            <div className="w-full px-12 mb-20 flex justify-between items-center max-w-md">
+                                <button onClick={onClose} className="flex flex-col items-center gap-4 group">
+                                    <div className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-[0_0_40px_rgba(244,63,94,0.4)]">
+                                        <Icons.PhoneOff className="w-8 h-8 fill-current" />
+                                    </div>
+                                    <span className="text-sm font-medium opacity-80">Decline</span>
+                                </button>
+                                <button onClick={() => setStatus('connected')} className="flex flex-col items-center gap-4 group">
+                                    <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-[0_0_40px_rgba(16,185,129,0.4)] animate-bounce">
+                                        <Icons.Phone className="w-8 h-8 fill-current" />
+                                    </div>
+                                    <span className="text-sm font-medium opacity-80">Accept</span>
+                                </button>
+                            </div>
                         </>
                     ) : (
                         <>
-                           <div className="flex flex-col items-center mt-20"><div className="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mb-6"><Icons.Users className="w-10 h-10 text-white" /></div><h2 className="text-4xl font-medium">Mom</h2><p className="text-xl mt-4 text-emerald-400 font-mono">00:12</p></div>
-                           <div className="mb-20 grid grid-cols-3 gap-8">{[1,2,3,4,5,6].map(i => <div key={i} className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-sm border border-white/5"><div className="w-2 h-2 bg-white rounded-full"></div></div>)}</div>
-                           <div className="mb-20"><button onClick={onClose} className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center mx-auto hover:bg-rose-600 shadow-[0_0_40px_rgba(244,63,94,0.4)]"><Icons.PhoneOff className="w-10 h-10 fill-current" /></button></div>
+                           <div className="flex flex-col items-center mt-20">
+                               <div className="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                                   <Icons.Users className="w-10 h-10 text-white" />
+                               </div>
+                               <h2 className="text-4xl font-medium">Mom</h2>
+                               <p className="text-xl mt-4 text-emerald-400 font-mono">00:12</p>
+                           </div>
+                           <div className="mb-20 grid grid-cols-3 gap-8">
+                               {[1,2,3,4,5,6].map(i => <div key={i} className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-sm border border-white/5"><div className="w-2 h-2 bg-white rounded-full"></div></div>)}
+                           </div>
+                           <div className="mb-20">
+                               <button onClick={onClose} className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center mx-auto hover:bg-rose-600 shadow-[0_0_40px_rgba(244,63,94,0.4)]">
+                                   <Icons.PhoneOff className="w-10 h-10 fill-current" />
+                               </button>
+                           </div>
                         </>
                     )}
                 </div>
@@ -1001,6 +1167,28 @@
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
             const [showFakeCall, setShowFakeCall] = useState(false);
             
+            // Phase 3: Auditory Shield State
+            const [isSirenActive, setIsSirenActive] = useState(false);
+            const sirenRef = useRef(null);
+
+            // Initialize siren audio once
+            useEffect(() => {
+                sirenRef.current = new Audio("https://cdn.freesound.org/previews/336/336899_4939433-lq.mp3"); // Using a hosted generic siren for functionality
+                sirenRef.current.loop = true;
+            }, []);
+
+            const toggleSiren = useCallback(() => {
+                if (isSirenActive) {
+                    sirenRef.current.pause();
+                    sirenRef.current.currentTime = 0;
+                    document.body.classList.remove('strobe-active');
+                } else {
+                    sirenRef.current.play().catch(e => console.error("Audio play failed", e));
+                    document.body.classList.add('strobe-active');
+                }
+                setIsSirenActive(!isSirenActive);
+            }, [isSirenActive]);
+            
             useLayoutEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }); }, [view]);
 
             if (!booted) return <BootSequence onComplete={() => setBooted(true)} />;
@@ -1018,6 +1206,7 @@
                 ];
                 return (
                     <div className="min-h-screen relative z-10 w-full flex flex-col pb-12">
+                        <GhostProtocol /> 
                         <StatusHUD user={user} />
                         {showFakeCall && <FakeCallInterface onClose={() => setShowFakeCall(false)} />}
                         
@@ -1082,7 +1271,9 @@
                                                     <div><h3 className="font-bold text-3xl tracking-tight">Hi, {extractName(user.email)}</h3><div className="flex items-center gap-2 mt-2"><span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span><p className="text-[10px] text-emerald-400 font-mono tracking-widest uppercase">Secure Connection</p></div></div>
                                                     <div className="w-16 h-16 bg-gradient-to-tr from-rose-500 to-purple-600 rounded-full flex items-center justify-center font-bold text-2xl shadow-lg border border-white/10">{user.email.charAt(0).toUpperCase()}</div>
                                                 </div>
-                                                <div className="flex-1 flex flex-col justify-center items-center"><SOSButton userId={user.id} /></div>
+                                                <div className="flex-1 flex flex-col justify-center items-center">
+                                                    <SOSButton userId={user.id} onSirenToggle={toggleSiren} isSirenActive={isSirenActive} />
+                                                </div>
                                                 <div className="grid grid-cols-2 gap-6 mt-12 relative z-10">
                                                     <button onClick={() => setView('community')} className="glass-panel p-6 rounded-[2rem] flex flex-col items-center gap-4 text-slate-300 hover:bg-white/10 hover:text-white transition-colors group border border-white/5 active:scale-95"><div className="p-4 bg-emerald-500/10 rounded-full group-hover:bg-emerald-500/20 transition-colors"><Icons.Map className="w-8 h-8 text-emerald-400" /></div><span className="text-[10px] font-bold uppercase tracking-widest">Live Map</span></button>
                                                     <button onClick={() => setView('features')} className="glass-panel p-6 rounded-[2rem] flex flex-col items-center gap-4 text-slate-300 hover:bg-white/10 hover:text-white transition-colors group border border-white/5 active:scale-95"><div className="p-4 bg-pink-500/10 rounded-full group-hover:bg-pink-500/20 transition-colors"><Icons.Users className="w-8 h-8 text-pink-400" /></div><span className="text-[10px] font-bold uppercase tracking-widest">Guardians</span></button>
