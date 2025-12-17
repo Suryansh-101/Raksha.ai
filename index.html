@@ -181,17 +181,17 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
 
-        /* Phase 3: Strobe Effect CSS */
+        /* Phase 3: Strobe Effect CSS - UPDATED */
         @keyframes strobe-flash {
             0%, 100% { background-color: transparent; }
             50% { background-color: rgba(255, 0, 0, 0.5); }
         }
-        .strobe-active {
+        .strobe-overlay {
             animation: strobe-flash 0.1s infinite;
             position: fixed;
             inset: 0;
-            z-index: 999;
-            pointer-events: none;
+            z-index: 60; /* High enough to see, low enough for modal interactions if needed */
+            pointer-events: none; /* KEY: Allows clicks to pass through to the Stop button */
         }
 
         /* Custom Scrollbar */
@@ -1181,10 +1181,10 @@
                 if (isSirenActive) {
                     sirenRef.current.pause();
                     sirenRef.current.currentTime = 0;
-                    document.body.classList.remove('strobe-active');
+                    // Removed body class manipulation to fix hanging issue
                 } else {
                     sirenRef.current.play().catch(e => console.error("Audio play failed", e));
-                    document.body.classList.add('strobe-active');
+                    // Removed body class manipulation
                 }
                 setIsSirenActive(!isSirenActive);
             }, [isSirenActive]);
@@ -1206,6 +1206,9 @@
                 ];
                 return (
                     <div className="min-h-screen relative z-10 w-full flex flex-col pb-12">
+                        {/* THE FIX: Render Strobe Effect Here as a Separate Layer */}
+                        {isSirenActive && <div className="strobe-overlay"></div>}
+
                         {/* Moved QuickExitButton into nav for alignment */}
                         
                         <StatusHUD user={user} />
