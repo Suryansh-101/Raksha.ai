@@ -353,8 +353,8 @@
 
         // --- COMPONENTS ---
 
-        // Phase 1: Ghost Protocol Component
-        const GhostProtocol = () => {
+        // Phase 1: Ghost Protocol Component (UPDATED: Integrated Button)
+        const QuickExitButton = ({ className = "" }) => {
             const handleQuickExit = useCallback(() => {
                 // 1. Stop all processes
                 window.stop();
@@ -377,7 +377,7 @@
             return (
                 <button 
                     onClick={handleQuickExit} 
-                    className="fixed top-4 right-4 z-[100] bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full shadow-lg border border-red-400 transition-all active:scale-95 text-xs tracking-wider uppercase animate-pulse hover:animate-none"
+                    className={`bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.6)] border border-red-500 transition-all active:scale-95 text-xs tracking-wider uppercase ${className}`}
                     title="Quick Exit (ESC)"
                 >
                     Quick Exit
@@ -1206,7 +1206,8 @@
                 ];
                 return (
                     <div className="min-h-screen relative z-10 w-full flex flex-col pb-12">
-                        <GhostProtocol /> 
+                        {/* Moved QuickExitButton into nav for alignment */}
+                        
                         <StatusHUD user={user} />
                         {showFakeCall && <FakeCallInterface onClose={() => setShowFakeCall(false)} />}
                         
@@ -1225,10 +1226,17 @@
                                     ))}
                                 </div>
                                 <div className="hidden md:flex items-center gap-6">
+                                    {/* Quick Exit Button Integrated in Desktop Nav */}
+                                    <QuickExitButton />
+                                    
                                     <button onClick={signOut} className="glass-button w-14 h-14 rounded-full flex items-center justify-center text-rose-400 hover:text-white transition-colors group" title="Logout"><Icons.LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" /></button>
                                     <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm shadow-lg border border-white/10">{user.email.charAt(0).toUpperCase()}</div>
                                 </div>
-                                <button className="md:hidden text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <Icons.X /> : <Icons.Menu />}</button>
+                                <div className="md:hidden flex items-center gap-4">
+                                    {/* Quick Exit Button Integrated in Mobile Header */}
+                                    <QuickExitButton className="px-4 py-2 text-[10px]" />
+                                    <button className="text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <Icons.X /> : <Icons.Menu />}</button>
+                                </div>
                             </div>
                             {mobileMenuOpen && (
                                 <div className="md:hidden bg-black/95 backdrop-blur-xl border-b border-white/10 absolute top-28 left-0 w-full p-6 flex flex-col gap-4 animate-fade-in shadow-2xl z-[60]">
