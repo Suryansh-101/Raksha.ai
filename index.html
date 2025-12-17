@@ -550,6 +550,120 @@
             );
         };
 
+        // --- INTRO PAGE (NEW) ---
+        const IntroPage = ({ onEnter }) => {
+            const [counter, setCounter] = useState(0);
+            
+            useEffect(() => {
+                // Animate the main statistic
+                const target = 445256;
+                const duration = 2000;
+                const step = target / (duration / 16);
+                
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    setCounter(Math.floor(current));
+                }, 16);
+                return () => clearInterval(timer);
+            }, []);
+
+            return (
+                <div className="fixed inset-0 z-50 bg-[#030014] overflow-y-auto overflow-x-hidden animate-fade-in flex flex-col">
+                    <div className="absolute inset-0 z-0">
+                        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-rose-600/10 rounded-full blur-[120px]"></div>
+                        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px]"></div>
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                    </div>
+
+                    <div className="relative z-10 container mx-auto px-6 py-12 flex-1 flex flex-col justify-center max-w-6xl">
+                        
+                        {/* Header */}
+                        <div className="text-center mb-16 space-y-6">
+                            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-rose-500/30 bg-rose-500/10 backdrop-blur-md mb-4">
+                                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                                <span className="text-xs font-mono text-rose-300 tracking-widest uppercase">Critical Situation Report</span>
+                            </div>
+                            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight">
+                                WHY <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-500">SAFETY</span> MATTERS
+                            </h1>
+                            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
+                                In a world advancing at lightspeed, personal security remains our most primal need. The data speaks a harsh truth we can no longer ignore.
+                            </p>
+                        </div>
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                            <div className="glass-panel p-8 rounded-3xl border border-rose-500/20 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-4 opacity-20"><Icons.AlertTriangle className="w-20 h-20 text-rose-500" /></div>
+                                <h3 className="text-5xl font-black text-white mb-2 font-mono">{counter.toLocaleString()}</h3>
+                                <p className="text-rose-400 font-bold uppercase tracking-widest text-xs mb-4">Cases Reported (2022)</p>
+                                <p className="text-slate-400 text-sm leading-relaxed">
+                                    According to NCRB data, crimes against women surged by 4%, highlighting the urgent need for proactive defense systems like Raksha.
+                                </p>
+                            </div>
+
+                            <div className="glass-panel p-8 rounded-3xl border border-purple-500/20 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-4 opacity-20"><Icons.Activity className="w-20 h-20 text-purple-500" /></div>
+                                <h3 className="text-5xl font-black text-white mb-2 font-mono">51</h3>
+                                <p className="text-purple-400 font-bold uppercase tracking-widest text-xs mb-4">FIRs Every Hour</p>
+                                <p className="text-slate-400 text-sm leading-relaxed">
+                                    Every 60 minutes, 51 new cases are registered across India. The gap between an incident and intervention is where we stand.
+                                </p>
+                            </div>
+
+                            <div className="glass-panel p-8 rounded-3xl border border-cyan-500/20 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-4 opacity-20"><Icons.Shield className="w-20 h-20 text-cyan-500" /></div>
+                                <h3 className="text-5xl font-black text-white mb-2 font-mono">31.4%</h3>
+                                <p className="text-cyan-400 font-bold uppercase tracking-widest text-xs mb-4">Domestic Incidents</p>
+                                <p className="text-slate-400 text-sm leading-relaxed">
+                                    The highest category of crime is cruelty by relatives. Safety isn't just about the streets; it's about every environment.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Mission Statement */}
+                        <div className="glass-card p-10 rounded-[3rem] border border-white/10 mb-16 flex flex-col md:flex-row items-center gap-10">
+                            <div className="flex-1 space-y-6">
+                                <h2 className="text-3xl font-bold text-white">Our Mission: <span className="text-emerald-400">Zero Tolerance</span></h2>
+                                <p className="text-slate-300 leading-relaxed">
+                                    Women's safety is the cornerstone of a progressive society. It empowers economic growth, fosters mental well-being, and upholds fundamental human rights. Raksha.ai is not just an app; it is a digital shield designed to predict, prevent, and protect.
+                                </p>
+                                <ul className="space-y-3">
+                                    {['Real-time Threat Detection', 'Community-Powered Surveillance', 'Instant Legal & Police Access'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-sm text-slate-400 font-mono uppercase tracking-wide">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="md:w-1/3 flex justify-center">
+                                <button 
+                                    onClick={onEnter}
+                                    className="group relative w-48 h-48 rounded-full flex items-center justify-center bg-gradient-to-br from-rose-600 to-purple-700 shadow-[0_0_50px_rgba(225,29,72,0.5)] transition-all hover:scale-105 active:scale-95"
+                                >
+                                    <div className="absolute inset-0 rounded-full border-4 border-white/20 animate-[spin_10s_linear_infinite]"></div>
+                                    <div className="flex flex-col items-center gap-2 text-white">
+                                        <Icons.Shield className="w-10 h-10 group-hover:animate-bounce" />
+                                        <span className="font-bold tracking-widest text-sm">INITIALIZE</span>
+                                        <span className="text-[10px] opacity-60 font-mono">SYSTEM</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="text-center">
+                            <p className="text-[10px] text-slate-600 font-mono uppercase tracking-[0.3em]">Data Source: National Crime Records Bureau (NCRB) Report 2022-2023</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         // --- AUTH SCREEN ---
         const AuthScreen = ({ signIn, signUp, loading, error }) => {
             const [email, setEmail] = useState('');
@@ -563,7 +677,7 @@
             };
 
             return (
-                <div className="flex items-center justify-center min-h-screen z-50 relative p-4">
+                <div className="flex items-center justify-center min-h-screen z-50 relative p-4 animate-fade-in">
                     <div className="glass-card p-10 rounded-[2.5rem] w-full max-w-md border border-white/10 relative overflow-hidden">
                          <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/10 rounded-full blur-[80px]"></div>
                          <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px]"></div>
@@ -1050,6 +1164,7 @@
             const { session, user, loading, error, signIn, signUp, signOut } = useSupabaseAuth();
             const [view, setView] = useState('home');
             const [booted, setBooted] = useState(false);
+            const [showIntro, setShowIntro] = useState(true); // Added state for Intro
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
             const [showFakeCall, setShowFakeCall] = useState(false);
             
@@ -1058,6 +1173,11 @@
             }, [view]);
 
             if (!booted) return <BootSequence onComplete={() => setBooted(true)} />;
+
+            // Show Intro Page after boot, before Auth/App
+            if (showIntro) {
+                return <IntroPage onEnter={() => setShowIntro(false)} />;
+            }
 
             if (!user) {
                 return <AuthScreen signIn={signIn} signUp={signUp} loading={loading} error={error} />;
